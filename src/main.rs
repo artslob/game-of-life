@@ -3,13 +3,16 @@ use macroquad::prelude::*;
 #[macroquad::main("BasicShapes")]
 async fn main() {
     loop {
-        clear_background(RED);
+        clear_background(BLACK);
 
-        draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        draw_circle(screen_width() - 30.0, screen_height() - 30.0, 15.0, YELLOW);
+        let scr_w: f32 = screen_width();
+        let scr_h: f32 = screen_height();
 
-        draw_text("IT WORKS!", 20.0, 20.0, 30.0, DARKGRAY);
+        let square_width = scr_w.min(scr_h);
+
+        let x = ((scr_w - square_width) / 2.).max(0.);
+        let y = ((scr_h - square_width) / 2.).max(0.);
+        draw_rectangle(x, y, square_width, square_width, WHITE);
 
         next_frame().await
     }
