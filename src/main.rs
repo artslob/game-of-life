@@ -3,7 +3,7 @@ use macroquad::prelude::*;
 
 const CELL_COUNT: i32 = 50;
 
-#[macroquad::main("BasicShapes")]
+#[macroquad::main("Game of Life")]
 async fn main() {
     // let life_dead = [CellState::Life, CellState::Dead];
     // let cell_row = (0..CELL_COUNT)
@@ -55,6 +55,31 @@ async fn main() {
         let y = ((scr_h - square_width) / 2.).max(0.);
 
         let cell_width = square_width / CELL_COUNT as f32;
+
+        const LINE_THICKNESS: f32 = 1.5;
+        const LINE_COLOR: Color = GRAY;
+        for i in 0..=CELL_COUNT {
+            let horizontal_y = y + i as f32 * cell_width;
+            draw_line(
+                x,
+                horizontal_y,
+                x + square_width,
+                horizontal_y,
+                LINE_THICKNESS,
+                LINE_COLOR,
+            );
+        }
+        for j in 0..=CELL_COUNT {
+            let vertical_x = x + j as f32 * cell_width;
+            draw_line(
+                vertical_x,
+                y,
+                vertical_x,
+                y + square_width,
+                LINE_THICKNESS,
+                LINE_COLOR,
+            );
+        }
 
         for (i, row) in cells.iter().enumerate() {
             for (j, cell) in row.iter().enumerate() {
