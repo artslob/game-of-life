@@ -8,6 +8,5 @@ TODO:
 5. select map from predefined
 6. allow creating custom map
 7. graphics:
-   1. white lines for cells separation
-   2. type of cells: circle or square
-   3. choose color
+   1. type of cells: circle or square
+   2. choose color
