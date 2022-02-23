@@ -16,14 +16,30 @@ async fn main() {
     //     .collect::<Vec<_>>();
 
     let mut cells: Vec<Vec<Cell>> = (0..CELL_COUNT)
-        .map(|_| (0..CELL_COUNT).map(|_| Cell {state: CellState::Dead}).collect())
+        .map(|_| {
+            (0..CELL_COUNT)
+                .map(|_| Cell {
+                    state: CellState::Dead,
+                })
+                .collect()
+        })
         .collect();
 
-    cells[0][1] = Cell {state: CellState::Life};
-    cells[1][2] = Cell {state: CellState::Life};
-    cells[2][0] = Cell {state: CellState::Life};
-    cells[2][1] = Cell {state: CellState::Life};
-    cells[2][2] = Cell {state: CellState::Life};
+    cells[0][1] = Cell {
+        state: CellState::Life,
+    };
+    cells[1][2] = Cell {
+        state: CellState::Life,
+    };
+    cells[2][0] = Cell {
+        state: CellState::Life,
+    };
+    cells[2][1] = Cell {
+        state: CellState::Life,
+    };
+    cells[2][2] = Cell {
+        state: CellState::Life,
+    };
 
     let mut time = get_time();
 
@@ -68,16 +84,7 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
         for (j, cell) in row.iter().enumerate() {
             match cell.state {
                 CellState::Dead => {
-                    let left_bound = i.checked_sub(1).unwrap_or_default();
-                    let right_bound = (i + 1).min(current.len() - 1);
-                    let upper_bound = j.checked_sub(1).unwrap_or_default();
-                    let lower_bound = (j + 1).min(row.len() - 1);
-                    let alive_cells_count = (left_bound..right_bound)
-                        .cartesian_product(upper_bound..lower_bound)
-                        .filter(|(left, right)| left != right)
-                        .map(|(a, b)| &current[a][b])
-                        .filter(|cell| matches!(cell.state, CellState::Life))
-                        .count();
+                    let alive_cells_count = count_alive_cells(current, &row, i, j);
                     let state = if alive_cells_count == 3 {
                         CellState::Life
                     } else {
@@ -86,16 +93,7 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
                     next_row.push(Cell { state });
                 }
                 CellState::Life => {
-                    let left_bound = i.checked_sub(1).unwrap_or_default();
-                    let right_bound = (i + 1).min(current.len() - 1);
-                    let upper_bound = j.checked_sub(1).unwrap_or_default();
-                    let lower_bound = (j + 1).min(row.len() - 1);
-                    let alive_cells_count = (left_bound..right_bound)
-                        .cartesian_product(upper_bound..lower_bound)
-                        .filter(|(left, right)| left != right)
-                        .map(|(a, b)| &current[a][b])
-                        .filter(|cell| matches!(cell.state, CellState::Life))
-                        .count();
+                    let alive_cells_count = count_alive_cells(current, &row, i, j);
                     let state = match alive_cells_count {
                         2 | 3 => CellState::Life,
                         _ => CellState::Dead,
@@ -107,6 +105,19 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
         result.push(next_row);
     }
     result
+}
+
+fn count_alive_cells(current: &[Vec<Cell>], row: &[Cell], i: usize, j: usize) -> usize {
+    let left_bound = i.checked_sub(1).unwrap_or_default();
+    let right_bound = (i + 1).min(current.len() - 1);
+    let upper_bound = j.checked_sub(1).unwrap_or_default();
+    let lower_bound = (j + 1).min(row.len() - 1);
+    (left_bound..right_bound)
+        .cartesian_product(upper_bound..lower_bound)
+        .filter(|(left, right)| left != right)
+        .map(|(a, b)| &current[a][b])
+        .filter(|cell| matches!(cell.state, CellState::Life))
+        .count()
 }
 
 #[derive(Debug, Clone)]
