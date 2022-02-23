@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use macroquad::prelude::*;
 
-const CELL_COUNT: i32 = 5;
+const CELL_COUNT: i32 = 50;
 
 #[macroquad::main("BasicShapes")]
 async fn main() {
@@ -68,7 +68,7 @@ async fn main() {
             }
         }
 
-        if get_time() - time > 1. {
+        if get_time() - time > 0.5 {
             cells = calculate_next_generation(&cells);
             time = get_time();
         }
@@ -108,13 +108,13 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
 }
 
 fn count_alive_cells(current: &[Vec<Cell>], row: &[Cell], i: usize, j: usize) -> usize {
-    let left_bound = i.checked_sub(1).unwrap_or_default();
-    let right_bound = (i + 1).min(current.len() - 1);
-    let upper_bound = j.checked_sub(1).unwrap_or_default();
-    let lower_bound = (j + 1).min(row.len() - 1);
-    (left_bound..right_bound)
-        .cartesian_product(upper_bound..lower_bound)
-        .filter(|(left, right)| left != right)
+    let upper_bound = i.checked_sub(1).unwrap_or_default();
+    let lower_bound = (i + 1).min(current.len() - 1);
+    let left_bound = j.checked_sub(1).unwrap_or_default();
+    let right_bound = (j + 1).min(row.len() - 1);
+    (upper_bound..=lower_bound)
+        .cartesian_product(left_bound..=right_bound)
+        .filter(|(a, b)| !(*a == i && *b == j))
         .map(|(a, b)| &current[a][b])
         .filter(|cell| matches!(cell.state, CellState::Life))
         .count()
