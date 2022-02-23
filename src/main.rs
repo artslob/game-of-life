@@ -83,15 +83,10 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
         let mut next_row = vec![];
         for (j, cell) in row.iter().enumerate() {
             let alive_count = count_alive_cells(current, &row, i, j);
-            let state = match cell.state {
-                CellState::Dead => match alive_count {
-                    3 => CellState::Life,
-                    _ => CellState::Dead,
-                },
-                CellState::Life => match alive_count {
-                    2 | 3 => CellState::Life,
-                    _ => CellState::Dead,
-                },
+            let state = match (cell.state, alive_count) {
+                (CellState::Dead, 3) => CellState::Life,
+                (CellState::Life, 2 | 3) => CellState::Life,
+                _ => CellState::Dead,
             };
             next_row.push(Cell { state });
         }
