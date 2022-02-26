@@ -1,3 +1,5 @@
+mod cli;
+
 use itertools::Itertools;
 use macroquad::prelude::*;
 
@@ -14,6 +16,7 @@ async fn main() {
     // let mut cells = (0..CELL_COUNT)
     //     .map(|_| cell_row.clone())
     //     .collect::<Vec<_>>();
+    let _cli = cli::parse();
 
     let mut cells: Vec<Vec<Cell>> = (0..CELL_COUNT)
         .map(|_| {
