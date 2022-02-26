@@ -1,5 +1,6 @@
 mod cli;
 
+use crate::cli::CellShape;
 use itertools::Itertools;
 use macroquad::prelude::*;
 
@@ -16,7 +17,7 @@ async fn main() {
     // let mut cells = (0..CELL_COUNT)
     //     .map(|_| cell_row.clone())
     //     .collect::<Vec<_>>();
-    let _cli = cli::parse();
+    let cli_args = cli::parse();
 
     let mut cells: Vec<Vec<Cell>> = (0..CELL_COUNT)
         .map(|_| {
@@ -92,7 +93,15 @@ async fn main() {
                 let cell_x = x + (j as f32 * cell_width);
                 let cell_y = y + (i as f32 * cell_width);
 
-                draw_rectangle(cell_x, cell_y, cell_width, cell_width, WHITE);
+                match cli_args.cell_shape {
+                    CellShape::Circle => {
+                        let radius = cell_width / 2.0;
+                        draw_circle(cell_x + radius, cell_y + radius, radius, WHITE);
+                    }
+                    CellShape::Square => {
+                        draw_rectangle(cell_x, cell_y, cell_width, cell_width, WHITE)
+                    }
+                }
             }
         }
 
