@@ -3,6 +3,8 @@ mod cli;
 use crate::cli::CellShape;
 use itertools::Itertools;
 use macroquad::prelude::*;
+use macroquad::ui::root_ui;
+use macroquad::ui::widgets;
 
 const CELL_COUNT: i32 = 50;
 
@@ -17,7 +19,10 @@ async fn main() {
 
         match &mut game_state {
             GameState::Menu => {
-                if is_key_released(KeyCode::Space) {
+                let mut ui = root_ui();
+                let play_button = widgets::Button::new("Play!");
+
+                if play_button.ui(&mut ui) || is_key_released(KeyCode::Space) {
                     game_state = GameState::Playing(Gameplay::new(cli_args.cell_shape))
                 }
             }
