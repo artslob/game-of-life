@@ -7,6 +7,8 @@ TODO:
 4. select speed
 5. select map from predefined
 6. allow creating custom map
-7. graphics:
+7. choose background color
+8. choose thickness of grid lines
+9. graphics:
    1. type of cells: circle or square
    2. choose color
