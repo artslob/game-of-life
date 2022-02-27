@@ -130,7 +130,11 @@ impl Menu {
                     1 => CellShape::Circle,
                     _ => panic!("index out of cell shape array"),
                 };
-                gameplay = Some(Gameplay::new(cell_shape, self.cell_update_frequency as f64));
+                let gameplay_params = GameplayParams {
+                    cell_shape,
+                    cell_update_frequency: self.cell_update_frequency as f64,
+                };
+                gameplay = Some(Gameplay::new(gameplay_params));
             }
         });
 
@@ -141,6 +145,11 @@ impl Menu {
     }
 }
 
+struct GameplayParams {
+    cell_shape: CellShape,
+    cell_update_frequency: f64,
+}
+
 struct Gameplay {
     cells: Vec<Vec<Cell>>,
     time: f64,
@@ -149,12 +158,12 @@ struct Gameplay {
 }
 
 impl Gameplay {
-    fn new(cell_shape: CellShape, cell_update_frequency: f64) -> Self {
+    fn new(params: GameplayParams) -> Self {
         Self {
             cells: Self::create_initial_cells(),
             time: get_time(),
-            cell_shape,
-            cell_update_frequency,
+            cell_shape: params.cell_shape,
+            cell_update_frequency: params.cell_update_frequency,
         }
     }
 
