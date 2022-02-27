@@ -13,6 +13,7 @@ async fn main() {
     let mut game_state = GameState::Menu;
 
     let mut cell_shape_index = 0;
+    let mut cell_update_frequency = 0.5;
 
     loop {
         clear_background(game_state.background_color());
@@ -38,6 +39,16 @@ async fn main() {
                         &mut cell_shape_index,
                     );
 
+                    ui.separator();
+
+                    ui.label(None, "Choose map update frequency in seconds:");
+                    ui.slider(
+                        hash!(),
+                        "[0.01 .. 10]",
+                        0.01..10.0,
+                        &mut cell_update_frequency,
+                    );
+
                     if is_play_clicked || is_key_released(KeyCode::Space) {
                         // TODO make code fail at compile time
                         let cell_shape = match cell_shape_index {
@@ -45,7 +56,10 @@ async fn main() {
                             1 => CellShape::Circle,
                             _ => panic!("index out of cell shape array"),
                         };
-                        game_state = GameState::Playing(Gameplay::new(cell_shape))
+                        game_state = GameState::Playing(Gameplay::new(
+                            cell_shape,
+                            cell_update_frequency as f64,
+                        ))
                     }
                 });
             }
@@ -116,14 +130,16 @@ struct Gameplay {
     cells: Vec<Vec<Cell>>,
     time: f64,
     cell_shape: CellShape,
+    cell_update_frequency: f64,
 }
 
 impl Gameplay {
-    fn new(cell_shape: CellShape) -> Self {
+    fn new(cell_shape: CellShape, cell_update_frequency: f64) -> Self {
         Self {
             cells: Self::create_initial_cells(),
             time: get_time(),
             cell_shape,
+            cell_update_frequency,
         }
     }
 
@@ -223,7 +239,7 @@ impl Gameplay {
             }
         }
 
-        if get_time() - self.time > 0.5 {
+        if get_time() - self.time > self.cell_update_frequency {
             self.cells = calculate_next_generation(&self.cells);
             self.time = get_time();
         }
