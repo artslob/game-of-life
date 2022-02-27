@@ -6,6 +6,6 @@ TODO:
 3. select map size
 4. select map from predefined
 5. allow creating custom map
-6. choose background color
-7. choose color of cell
-8. exit game by escape
+6. generate random map
+7. choose background color
+8. choose color of cell

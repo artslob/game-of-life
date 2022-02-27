@@ -133,7 +133,7 @@ impl Menu {
                 &mut self.grid_line_thickness,
             );
 
-            if is_play_clicked || is_key_released(KeyCode::Space) {
+            if is_play_clicked || is_key_pressed(KeyCode::Space) {
                 // TODO make code fail at compile time
                 let cell_shape = match self.cell_shape_index {
                     0 => CellShape::Square,
@@ -143,7 +143,7 @@ impl Menu {
                 let gameplay_params = GameplayParams {
                     cell_shape,
                     cell_update_frequency: self.cell_update_frequency as f64,
-                    grid_line_thickness: self.grid_line_thickness
+                    grid_line_thickness: self.grid_line_thickness,
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
@@ -281,6 +281,10 @@ impl Gameplay {
             self.time = get_time();
         }
 
-        GameState::Playing(self)
+        if is_key_pressed(KeyCode::Escape) {
+            GameState::Menu(Menu::new())
+        } else {
+            GameState::Playing(self)
+        }
     }
 }
