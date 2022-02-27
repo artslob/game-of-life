@@ -83,6 +83,7 @@ impl GameState {
 struct Menu {
     cell_shape_index: usize,
     cell_update_frequency: f32,
+    grid_line_thickness: f32,
 }
 
 impl Menu {
@@ -90,6 +91,7 @@ impl Menu {
         Self {
             cell_shape_index: 0,
             cell_update_frequency: 0.5,
+            grid_line_thickness: 1.5,
         }
     }
 
@@ -123,6 +125,14 @@ impl Menu {
                 &mut self.cell_update_frequency,
             );
 
+            ui.label(None, "Choose grid line thickness:");
+            ui.slider(
+                hash!(),
+                "[0.0 .. 5.0]",
+                0.0..5.0,
+                &mut self.grid_line_thickness,
+            );
+
             if is_play_clicked || is_key_released(KeyCode::Space) {
                 // TODO make code fail at compile time
                 let cell_shape = match self.cell_shape_index {
@@ -133,6 +143,7 @@ impl Menu {
                 let gameplay_params = GameplayParams {
                     cell_shape,
                     cell_update_frequency: self.cell_update_frequency as f64,
+                    grid_line_thickness: self.grid_line_thickness
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
@@ -148,6 +159,7 @@ impl Menu {
 struct GameplayParams {
     cell_shape: CellShape,
     cell_update_frequency: f64,
+    grid_line_thickness: f32,
 }
 
 struct Gameplay {
@@ -155,6 +167,7 @@ struct Gameplay {
     time: f64,
     cell_shape: CellShape,
     cell_update_frequency: f64,
+    grid_line_thickness: f32,
 }
 
 impl Gameplay {
@@ -164,6 +177,7 @@ impl Gameplay {
             time: get_time(),
             cell_shape: params.cell_shape,
             cell_update_frequency: params.cell_update_frequency,
+            grid_line_thickness: params.grid_line_thickness,
         }
     }
 
@@ -218,7 +232,6 @@ impl Gameplay {
 
         let cell_width = square_width / CELL_COUNT as f32;
 
-        const LINE_THICKNESS: f32 = 1.5;
         const LINE_COLOR: Color = GRAY;
         for i in 0..=CELL_COUNT {
             let horizontal_y = y + i as f32 * cell_width;
@@ -227,7 +240,7 @@ impl Gameplay {
                 horizontal_y,
                 x + square_width,
                 horizontal_y,
-                LINE_THICKNESS,
+                self.grid_line_thickness,
                 LINE_COLOR,
             );
         }
@@ -238,7 +251,7 @@ impl Gameplay {
                 y,
                 vertical_x,
                 y + square_width,
-                LINE_THICKNESS,
+                self.grid_line_thickness,
                 LINE_COLOR,
             );
         }
