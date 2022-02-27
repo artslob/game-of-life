@@ -1,6 +1,6 @@
 use clap::Parser;
 
-pub fn parse() -> Cli {
+pub fn _parse() -> Cli {
     Cli::parse()
 }
 

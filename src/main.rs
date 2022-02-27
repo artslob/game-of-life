@@ -2,17 +2,17 @@ mod cli;
 
 use crate::cli::CellShape;
 use itertools::Itertools;
+use macroquad::hash;
 use macroquad::prelude::*;
 use macroquad::ui::root_ui;
-use macroquad::ui::widgets;
 
 const CELL_COUNT: i32 = 50;
 
 #[macroquad::main("Game of Life")]
 async fn main() {
-    let cli_args = cli::parse();
-
     let mut game_state = GameState::Menu;
+
+    let mut cell_shape_index = 0;
 
     loop {
         clear_background(game_state.background_color());
@@ -20,11 +20,34 @@ async fn main() {
         match &mut game_state {
             GameState::Menu => {
                 let mut ui = root_ui();
-                let play_button = widgets::Button::new("Play!");
 
-                if play_button.ui(&mut ui) || is_key_released(KeyCode::Space) {
-                    game_state = GameState::Playing(Gameplay::new(cli_args.cell_shape))
-                }
+                // TODO fix resize
+                let window_position = vec2(screen_width() / 4., screen_height() / 4.);
+                let window_size = vec2(screen_width() / 2., screen_height() / 2.);
+
+                ui.window(hash!(), window_position, window_size, |ui| {
+                    ui.label(None, "Game of Life");
+                    let is_play_clicked = ui.button(None, "Play!");
+
+                    ui.separator();
+
+                    ui.combo_box(
+                        hash!(),
+                        "Choose cell shape",
+                        &["Square", "Circle"],
+                        &mut cell_shape_index,
+                    );
+
+                    if is_play_clicked || is_key_released(KeyCode::Space) {
+                        // TODO make code fail at compile time
+                        let cell_shape = match cell_shape_index {
+                            0 => CellShape::Square,
+                            1 => CellShape::Circle,
+                            _ => panic!("index out of cell shape array"),
+                        };
+                        game_state = GameState::Playing(Gameplay::new(cell_shape))
+                    }
+                });
             }
             GameState::Playing(gameplay) => gameplay.play(),
         }
