@@ -4,11 +4,9 @@ TODO:
 1. read map from file
 2. connect top to bottom of map and left to right
 3. select map size
-4. select speed
-5. select map from predefined
-6. allow creating custom map
-7. choose background color
+4. select map from predefined
+5. allow creating custom map
+6. choose background color
+7. choose color of cell
 8. choose thickness of grid lines
-9. graphics:
-   1. type of cells: circle or square
-   2. choose color
+9. select speed
