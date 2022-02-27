@@ -10,61 +10,15 @@ const CELL_COUNT: i32 = 50;
 
 #[macroquad::main("Game of Life")]
 async fn main() {
-    let mut game_state = GameState::Menu;
-
-    let mut cell_shape_index = 0;
-    let mut cell_update_frequency = 0.5;
+    let mut game_state = GameState::Menu(Menu::new());
 
     loop {
         clear_background(game_state.background_color());
 
-        match &mut game_state {
-            GameState::Menu => {
-                let mut ui = root_ui();
-
-                // TODO fix resize
-                let window_position = vec2(screen_width() / 4., screen_height() / 4.);
-                let window_size = vec2(screen_width() / 2., screen_height() / 2.);
-
-                ui.window(hash!(), window_position, window_size, |ui| {
-                    ui.label(None, "Game of Life");
-                    let is_play_clicked = ui.button(None, "Play!");
-
-                    ui.separator();
-
-                    ui.combo_box(
-                        hash!(),
-                        "Choose cell shape",
-                        &["Square", "Circle"],
-                        &mut cell_shape_index,
-                    );
-
-                    ui.separator();
-
-                    ui.label(None, "Choose map update frequency in seconds:");
-                    ui.slider(
-                        hash!(),
-                        "[0.01 .. 10]",
-                        0.01..10.0,
-                        &mut cell_update_frequency,
-                    );
-
-                    if is_play_clicked || is_key_released(KeyCode::Space) {
-                        // TODO make code fail at compile time
-                        let cell_shape = match cell_shape_index {
-                            0 => CellShape::Square,
-                            1 => CellShape::Circle,
-                            _ => panic!("index out of cell shape array"),
-                        };
-                        game_state = GameState::Playing(Gameplay::new(
-                            cell_shape,
-                            cell_update_frequency as f64,
-                        ))
-                    }
-                });
-            }
+        game_state = match game_state {
+            GameState::Menu(menu) => menu.show(),
             GameState::Playing(gameplay) => gameplay.play(),
-        }
+        };
 
         next_frame().await
     }
@@ -113,15 +67,76 @@ enum CellState {
 }
 
 enum GameState {
-    Menu,
+    Menu(Menu),
     Playing(Gameplay),
 }
 
 impl GameState {
     fn background_color(&self) -> Color {
         match self {
-            GameState::Menu => LIGHTGRAY,
+            GameState::Menu(_) => LIGHTGRAY,
             GameState::Playing(_) => BLACK,
+        }
+    }
+}
+
+struct Menu {
+    cell_shape_index: usize,
+    cell_update_frequency: f32,
+}
+
+impl Menu {
+    fn new() -> Self {
+        Self {
+            cell_shape_index: 0,
+            cell_update_frequency: 0.5,
+        }
+    }
+
+    fn show(mut self) -> GameState {
+        let mut gameplay = None;
+
+        // TODO fix resize
+        let window_position = vec2(screen_width() / 4., screen_height() / 4.);
+        let window_size = vec2(screen_width() / 2., screen_height() / 2.);
+
+        root_ui().window(hash!(), window_position, window_size, |ui| {
+            ui.label(None, "Game of Life");
+            let is_play_clicked = ui.button(None, "Play!");
+
+            ui.separator();
+
+            ui.combo_box(
+                hash!(),
+                "Choose cell shape",
+                &["Square", "Circle"],
+                &mut self.cell_shape_index,
+            );
+
+            ui.separator();
+
+            ui.label(None, "Choose map update frequency in seconds:");
+            ui.slider(
+                hash!(),
+                "[0.01 .. 10]",
+                0.01..10.0,
+                &mut self.cell_update_frequency,
+            );
+
+            if is_play_clicked || is_key_released(KeyCode::Space) {
+                // TODO make code fail at compile time
+                let cell_shape = match self.cell_shape_index {
+                    0 => CellShape::Square,
+                    1 => CellShape::Circle,
+                    _ => panic!("index out of cell shape array"),
+                };
+                gameplay = Some(Gameplay::new(cell_shape, self.cell_update_frequency as f64));
+            }
+        });
+
+        match gameplay {
+            None => GameState::Menu(self),
+            Some(gameplay) => GameState::Playing(gameplay),
         }
     }
 }
@@ -183,7 +198,7 @@ impl Gameplay {
         cells
     }
 
-    fn play(&mut self) {
+    fn play(mut self) -> GameState {
         let scr_w: f32 = screen_width();
         let scr_h: f32 = screen_height();
 
@@ -243,5 +258,7 @@ impl Gameplay {
             self.cells = calculate_next_generation(&self.cells);
             self.time = get_time();
         }
+
+        GameState::Playing(self)
     }
 }
