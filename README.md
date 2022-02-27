@@ -9,4 +9,4 @@ TODO:
 6. choose background color
 7. choose color of cell
 8. choose thickness of grid lines
-9. select speed
+9. exit game by escape
