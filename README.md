@@ -1,5 +1,7 @@
 # game-of-life
 
+![Game logo](/logo.png?raw=true "Game logo")
+
 TODO:
 1. read map from file
 2. connect top to bottom of map and left to right
