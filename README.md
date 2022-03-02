@@ -1,4 +1,4 @@
-# game-of-life
+# game-of-life (work in progress)
 
 <div align="center">
     <img alt="Game logo" align="center" src="/logo.png?raw=true" title="Game logo"/>
