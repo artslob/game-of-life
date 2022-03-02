@@ -1,5 +1,11 @@
 # game-of-life
 
+<div align="center">
+    <img alt="Game logo" align="center" src="/logo.png?raw=true" title="Game logo"/>
+</div>
+
+Logo created with Canva.
+
 TODO:
 1. read map from file
 2. connect top to bottom of map and left to right
