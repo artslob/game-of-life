@@ -1,6 +1,8 @@
 # game-of-life
 
-![Game logo](/logo.png?raw=true "Game logo")
+<div align="center">
+    <img alt="Game logo" align="center" src="/logo.png?raw=true" title="Game logo"/>
+</div>
 
 TODO:
 1. read map from file
