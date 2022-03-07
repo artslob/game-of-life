@@ -1,6 +1,3 @@
-mod cli;
-
-use crate::cli::CellShape;
 use itertools::Itertools;
 use macroquad::hash;
 use macroquad::prelude::*;
@@ -101,6 +98,12 @@ struct Cell {
 enum CellState {
     Dead,
     Life,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum CellShape {
+    Circle,
+    Square,
 }
 
 enum GameState {
