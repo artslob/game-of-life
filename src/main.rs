@@ -83,19 +83,13 @@ fn count_alive_cells(
 
     use std::iter::once;
 
-    (once(i_upper_pos)
-        .chain(once(Some(i)))
-        .chain(once(i_lower_pos)))
-    .flatten()
-    .cartesian_product(
-        once(j_left_pos)
-            .chain(once(Some(j)).chain(once(j_right_pos)))
-            .flatten(),
-    )
-    .filter(|(a, b)| !(*a == i && *b == j))
-    .map(|(a, b)| &current[a][b])
-    .filter(|cell| matches!(cell.state, CellState::Life))
-    .count()
+    (i_upper_pos.iter().chain(once(&i)).chain(i_lower_pos.iter()))
+        .copied()
+        .cartesian_product((j_left_pos.iter().chain(once(&j)).chain(j_right_pos.iter())).copied())
+        .filter(|(a, b)| !(*a == i && *b == j))
+        .map(|(a, b)| &current[a][b])
+        .filter(|cell| matches!(cell.state, CellState::Life))
+        .count()
 }
 
 #[derive(Debug, Clone)]
