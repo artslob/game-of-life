@@ -29,7 +29,7 @@ fn calculate_next_generation(current: &[Vec<Cell>], field_borders: FieldBorders)
     for (i, row) in current.iter().enumerate() {
         let mut next_row = vec![];
         for (j, cell) in row.iter().enumerate() {
-            let alive_count = count_alive_cells(current, &row, i, j, field_borders);
+            let alive_count = count_alive_cells(current, row, i, j, field_borders);
             let state = match (cell.state, alive_count) {
                 (CellState::Dead, 3) => CellState::Life,
                 (CellState::Life, 2 | 3) => CellState::Life,
