@@ -24,12 +24,12 @@ async fn main() {
     }
 }
 
-fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
+fn calculate_next_generation(current: &[Vec<Cell>], field_borders: FieldBorders) -> Vec<Vec<Cell>> {
     let mut result = vec![];
     for (i, row) in current.iter().enumerate() {
         let mut next_row = vec![];
         for (j, cell) in row.iter().enumerate() {
-            let alive_count = count_alive_cells(current, &row, i, j);
+            let alive_count = count_alive_cells(current, &row, i, j, field_borders);
             let state = match (cell.state, alive_count) {
                 (CellState::Dead, 3) => CellState::Life,
                 (CellState::Life, 2 | 3) => CellState::Life,
@@ -42,17 +42,60 @@ fn calculate_next_generation(current: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
     result
 }
 
-fn count_alive_cells(current: &[Vec<Cell>], row: &[Cell], i: usize, j: usize) -> usize {
-    let upper_bound = i.checked_sub(1).unwrap_or_default();
-    let lower_bound = (i + 1).min(current.len() - 1);
-    let left_bound = j.checked_sub(1).unwrap_or_default();
-    let right_bound = (j + 1).min(row.len() - 1);
-    (upper_bound..=lower_bound)
-        .cartesian_product(left_bound..=right_bound)
-        .filter(|(a, b)| !(*a == i && *b == j))
-        .map(|(a, b)| &current[a][b])
-        .filter(|cell| matches!(cell.state, CellState::Life))
-        .count()
+fn count_alive_cells(
+    current: &[Vec<Cell>],
+    row: &[Cell],
+    i: usize,
+    j: usize,
+    field_borders: FieldBorders,
+) -> usize {
+    let i_upper_pos = match i.checked_sub(1) {
+        None => match field_borders {
+            FieldBorders::Connected => Some(current.len() - 1),
+            FieldBorders::Limited => None,
+        },
+        Some(i) => Some(i),
+    };
+    let i_lower_pos: Option<usize> = if i + 1 >= current.len() {
+        match field_borders {
+            FieldBorders::Connected => Some(0),
+            FieldBorders::Limited => None,
+        }
+    } else {
+        Some(i + 1)
+    };
+
+    let j_left_pos = match j.checked_sub(1) {
+        None => match field_borders {
+            FieldBorders::Connected => Some(row.len() - 1),
+            FieldBorders::Limited => None,
+        },
+        Some(i) => Some(i),
+    };
+    let j_right_pos = if j + 1 >= row.len() {
+        match field_borders {
+            FieldBorders::Connected => Some(0),
+            FieldBorders::Limited => None,
+        }
+    } else {
+        Some(j + 1)
+    };
+
+    use std::iter::once;
+
+    (once(i_upper_pos)
+        .chain(once(Some(i)))
+        .chain(once(i_lower_pos)))
+    .flatten()
+    .cartesian_product(
+        once(j_left_pos)
+            .chain(once(Some(j)).chain(once(j_right_pos)))
+            .flatten(),
+    )
+    .filter(|(a, b)| !(*a == i && *b == j))
+    .map(|(a, b)| &current[a][b])
+    .filter(|cell| matches!(cell.state, CellState::Life))
+    .count()
 }
 
 #[derive(Debug, Clone)]
@@ -80,10 +123,17 @@ impl GameState {
     }
 }
 
+#[derive(Debug, Copy, Clone)]
+enum FieldBorders {
+    Connected,
+    Limited,
+}
+
 struct Menu {
     cell_shape_index: usize,
     cell_update_frequency: f32,
     grid_line_thickness: f32,
+    field_borders_index: usize,
 }
 
 impl Menu {
@@ -92,6 +142,7 @@ impl Menu {
             cell_shape_index: 0,
             cell_update_frequency: 0.5,
             grid_line_thickness: 1.5,
+            field_borders_index: 0,
         }
     }
 
@@ -133,6 +184,13 @@ impl Menu {
                 &mut self.grid_line_thickness,
             );
 
+            ui.combo_box(
+                hash!(),
+                "Field borders",
+                &["Limited", "Connected"],
+                &mut self.field_borders_index,
+            );
+
             if is_play_clicked || is_key_pressed(KeyCode::Space) {
                 // TODO make code fail at compile time
                 let cell_shape = match self.cell_shape_index {
@@ -140,10 +198,16 @@ impl Menu {
                     1 => CellShape::Circle,
                     _ => panic!("index out of cell shape array"),
                 };
+                let field_borders = match self.field_borders_index {
+                    0 => FieldBorders::Limited,
+                    1 => FieldBorders::Connected,
+                    _ => panic!("index out of field borders array"),
+                };
                 let gameplay_params = GameplayParams {
                     cell_shape,
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
+                    field_borders,
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
@@ -160,6 +224,7 @@ struct GameplayParams {
     cell_shape: CellShape,
     cell_update_frequency: f64,
     grid_line_thickness: f32,
+    field_borders: FieldBorders,
 }
 
 struct Gameplay {
@@ -168,6 +233,7 @@ struct Gameplay {
     cell_shape: CellShape,
     cell_update_frequency: f64,
     grid_line_thickness: f32,
+    field_borders: FieldBorders,
 }
 
 impl Gameplay {
@@ -178,6 +244,7 @@ impl Gameplay {
             cell_shape: params.cell_shape,
             cell_update_frequency: params.cell_update_frequency,
             grid_line_thickness: params.grid_line_thickness,
+            field_borders: params.field_borders,
         }
     }
 
@@ -277,7 +344,7 @@ impl Gameplay {
         }
 
         if get_time() - self.time > self.cell_update_frequency {
-            self.cells = calculate_next_generation(&self.cells);
+            self.cells = calculate_next_generation(&self.cells, self.field_borders);
             self.time = get_time();
         }
 
