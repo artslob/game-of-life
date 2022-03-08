@@ -1,5 +1,5 @@
 use crate::gameplay_params::{
-    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+    BackgroundColor, CellColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
 };
 use crate::{GameState, Menu};
 use itertools::Itertools;
@@ -15,6 +15,7 @@ pub struct Gameplay {
     grid_line_thickness: f32,
     field_borders: FieldBorders,
     background_color: BackgroundColor,
+    cell_color: CellColor,
 }
 
 impl Gameplay {
@@ -32,6 +33,7 @@ impl Gameplay {
             grid_line_thickness: params.grid_line_thickness,
             field_borders: params.field_borders,
             background_color: params.background_color,
+            cell_color: params.cell_color,
         }
     }
 
@@ -123,18 +125,21 @@ impl Gameplay {
                 let cell_x = x + (j as f32 * cell_width);
                 let cell_y = y + (i as f32 * cell_width);
 
+                let color = self.cell_color.color();
+
                 match self.cell_shape {
                     CellShape::Circle => {
                         let radius = cell_width / 2.0;
-                        draw_circle(cell_x + radius, cell_y + radius, radius, WHITE);
+                        draw_circle(cell_x + radius, cell_y + radius, radius, color);
                     }
                     CellShape::Square => {
-                        draw_rectangle(cell_x, cell_y, cell_width, cell_width, WHITE)
+                        draw_rectangle(cell_x, cell_y, cell_width, cell_width, color)
                     }
                 }
             }
         }
 
+        // TODO calc cells update by past time
         if get_time() - self.time > self.cell_update_frequency {
             self.cells = calculate_next_generation(&self.cells, self.field_borders);
             self.time = get_time();

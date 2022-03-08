@@ -1,6 +1,6 @@
 use crate::gameplay::Gameplay;
 use crate::gameplay_params::{
-    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+    BackgroundColor, CellColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
 };
 use crate::GameState;
 use macroquad::hash;
@@ -15,6 +15,7 @@ pub struct Menu {
     field_borders_index: usize,
     map_generation_index: usize,
     background_color_index: usize,
+    cell_color_index: usize,
 }
 
 impl Menu {
@@ -26,6 +27,7 @@ impl Menu {
             field_borders_index: 0,
             map_generation_index: 0,
             background_color_index: 0,
+            cell_color_index: 0,
         }
     }
 
@@ -92,6 +94,15 @@ impl Menu {
                 &mut self.background_color_index,
             );
 
+            ui.separator();
+
+            ui.combo_box(
+                hash!(),
+                "Choose cell color",
+                CellColor::VARIANTS,
+                &mut self.cell_color_index,
+            );
+
             if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                 let cell_shape =
                     CellShape::from_repr(self.cell_shape_index).expect("cell shape index error");
@@ -101,6 +112,8 @@ impl Menu {
                     .expect("map generation index error");
                 let background_color = BackgroundColor::from_repr(self.background_color_index)
                     .expect("background color index error");
+                let cell_color =
+                    CellColor::from_repr(self.cell_color_index).expect("cell color index error");
                 let gameplay_params = GameplayParams {
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
@@ -108,6 +121,7 @@ impl Menu {
                     field_borders,
                     map_generation,
                     background_color,
+                    cell_color,
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
