@@ -11,6 +11,5 @@ TODO:
 2. select map size
 3. select map from predefined
 4. allow creating custom map
-5. generate random map
-6. choose background color
-7. choose color of cell
+5. choose background color
+6. choose color of cell
