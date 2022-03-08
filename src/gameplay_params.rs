@@ -1,9 +1,12 @@
+use macroquad::prelude::*;
+
 pub struct GameplayParams {
     pub cell_update_frequency: f64,
     pub grid_line_thickness: f32,
     pub cell_shape: CellShape,
     pub field_borders: FieldBorders,
     pub map_generation: MapGeneration,
+    pub background_color: BackgroundColor,
 }
 
 #[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
@@ -22,4 +25,35 @@ pub enum FieldBorders {
 pub enum MapGeneration {
     Random,
     Glider,
+}
+
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
+pub enum BackgroundColor {
+    Black,
+    Lightgray,
+    Gray,
+    Darkgray,
+    Yellow,
+    Red,
+    Green,
+    Blue,
+    Purple,
+    White,
+}
+
+impl BackgroundColor {
+    pub const fn color(&self) -> Color {
+        match self {
+            BackgroundColor::Lightgray => LIGHTGRAY,
+            BackgroundColor::Gray => GRAY,
+            BackgroundColor::Darkgray => DARKGRAY,
+            BackgroundColor::Yellow => YELLOW,
+            BackgroundColor::Red => RED,
+            BackgroundColor::Green => GREEN,
+            BackgroundColor::Blue => BLUE,
+            BackgroundColor::Purple => PURPLE,
+            BackgroundColor::White => WHITE,
+            BackgroundColor::Black => BLACK,
+        }
+    }
 }

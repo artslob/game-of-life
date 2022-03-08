@@ -1,4 +1,6 @@
-use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
+use crate::gameplay_params::{
+    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+};
 use crate::{GameState, Menu};
 use itertools::Itertools;
 use macroquad::prelude::*;
@@ -12,6 +14,7 @@ pub struct Gameplay {
     cell_update_frequency: f64,
     grid_line_thickness: f32,
     field_borders: FieldBorders,
+    background_color: BackgroundColor,
 }
 
 impl Gameplay {
@@ -28,6 +31,7 @@ impl Gameplay {
             cell_update_frequency: params.cell_update_frequency,
             grid_line_thickness: params.grid_line_thickness,
             field_borders: params.field_borders,
+            background_color: params.background_color,
         }
     }
 
@@ -141,6 +145,10 @@ impl Gameplay {
         } else {
             GameState::Playing(self)
         }
+    }
+
+    pub fn background_color(&self) -> Color {
+        self.background_color.color()
     }
 }
 

@@ -11,7 +11,7 @@ impl GameState {
     pub fn background_color(&self) -> Color {
         match self {
             GameState::Menu(_) => LIGHTGRAY,
-            GameState::Playing(_) => BLACK,
+            GameState::Playing(gameplay) => gameplay.background_color(),
         }
     }
 }

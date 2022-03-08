@@ -1,5 +1,7 @@
 use crate::gameplay::Gameplay;
-use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
+use crate::gameplay_params::{
+    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+};
 use crate::GameState;
 use macroquad::hash;
 use macroquad::prelude::*;
@@ -12,6 +14,7 @@ pub struct Menu {
     grid_line_thickness: f32,
     field_borders_index: usize,
     map_generation_index: usize,
+    background_color_index: usize,
 }
 
 impl Menu {
@@ -22,6 +25,7 @@ impl Menu {
             grid_line_thickness: 1.5,
             field_borders_index: 0,
             map_generation_index: 0,
+            background_color_index: 0,
         }
     }
 
@@ -79,6 +83,15 @@ impl Menu {
                 &mut self.field_borders_index,
             );
 
+            ui.separator();
+
+            ui.combo_box(
+                hash!(),
+                "Choose background color",
+                BackgroundColor::VARIANTS,
+                &mut self.background_color_index,
+            );
+
             if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                 let cell_shape =
                     CellShape::from_repr(self.cell_shape_index).expect("cell shape index error");
@@ -86,12 +99,15 @@ impl Menu {
                     .expect("field borders index error");
                 let map_generation = MapGeneration::from_repr(self.map_generation_index)
                     .expect("map generation index error");
+                let background_color = BackgroundColor::from_repr(self.background_color_index)
+                    .expect("background color index error");
                 let gameplay_params = GameplayParams {
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
                     cell_shape,
                     field_borders,
                     map_generation,
+                    background_color,
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
