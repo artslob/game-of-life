@@ -1,5 +1,6 @@
 pub mod game_state;
 pub mod gameplay;
+pub mod gameplay_params;
 pub mod menu;
 
 use crate::game_state::GameState;

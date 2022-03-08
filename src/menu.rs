@@ -1,4 +1,5 @@
-use crate::gameplay::{CellShape, FieldBorders, Gameplay, GameplayParams, MapGeneration};
+use crate::gameplay::Gameplay;
+use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
 use crate::GameState;
 use macroquad::hash;
 use macroquad::prelude::*;
