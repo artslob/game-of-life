@@ -66,7 +66,7 @@ impl Menu {
                 &mut self.field_borders_index,
             );
 
-            if is_play_clicked || is_key_pressed(KeyCode::Space) {
+            if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                 // TODO make code fail at compile time
                 let cell_shape = match self.cell_shape_index {
                     0 => CellShape::Square,
