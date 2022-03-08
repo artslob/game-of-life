@@ -32,7 +32,7 @@ impl Menu {
     }
 
     pub fn show(mut self) -> GameState {
-        let mut gameplay = None;
+        let mut gameplay_params = None;
 
         // TODO fix resize
         let window_position = vec2(screen_width() / 4., screen_height() / 4.);
@@ -114,7 +114,7 @@ impl Menu {
                     .expect("background color index error");
                 let cell_color =
                     CellColor::from_repr(self.cell_color_index).expect("cell color index error");
-                let gameplay_params = GameplayParams {
+                gameplay_params = Some(GameplayParams {
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
                     cell_shape,
@@ -122,14 +122,13 @@ impl Menu {
                     map_generation,
                     background_color,
                     cell_color,
-                };
-                gameplay = Some(Gameplay::new(gameplay_params));
+                });
             }
         });
 
-        match gameplay {
+        match gameplay_params {
             None => GameState::Menu(self),
-            Some(gameplay) => GameState::Playing(gameplay),
+            Some(params) => GameState::Playing(Gameplay::new(self, params)),
         }
     }
 }

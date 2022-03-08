@@ -11,4 +11,4 @@ TODO:
 2. select map size
 3. select map from predefined
 4. allow creating custom map
-5. restore menu when exit from gameplay
+5. write game description in menu

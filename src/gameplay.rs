@@ -8,6 +8,7 @@ use macroquad::prelude::*;
 const CELL_COUNT: i32 = 50;
 
 pub struct Gameplay {
+    menu: Menu,
     cells: Vec<Vec<Cell>>,
     time: f64,
     cell_shape: CellShape,
@@ -19,13 +20,14 @@ pub struct Gameplay {
 }
 
 impl Gameplay {
-    pub fn new(params: GameplayParams) -> Self {
+    pub fn new(menu: Menu, params: GameplayParams) -> Self {
         let cells = match params.map_generation {
             MapGeneration::Random => Self::map_random(),
             MapGeneration::Glider => Self::map_glider(),
         };
 
         Self {
+            menu,
             cells,
             time: get_time(),
             cell_shape: params.cell_shape,
@@ -146,7 +148,7 @@ impl Gameplay {
         }
 
         if is_key_pressed(KeyCode::Escape) {
-            GameState::Menu(Menu::new())
+            GameState::Menu(self.menu)
         } else {
             GameState::Playing(self)
         }
