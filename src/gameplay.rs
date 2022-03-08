@@ -15,8 +15,13 @@ pub struct Gameplay {
 
 impl Gameplay {
     pub fn new(params: GameplayParams) -> Self {
+        let cells = match params.map_generation {
+            MapGeneration::Random => Self::map_random(),
+            MapGeneration::Glider => Self::map_glider(),
+        };
+
         Self {
-            cells: Self::create_initial_cells(),
+            cells,
             time: get_time(),
             cell_shape: params.cell_shape,
             cell_update_frequency: params.cell_update_frequency,
@@ -25,17 +30,7 @@ impl Gameplay {
         }
     }
 
-    fn create_initial_cells() -> Vec<Vec<Cell>> {
-        // let life_dead = [CellState::Life, CellState::Dead];
-        // let cell_row = (0..CELL_COUNT)
-        //     .zip(life_dead.iter().cycle())
-        //     .map(|(_, state)| Cell { state: *state })
-        //     .collect::<Vec<_>>();
-        //
-        // let mut cells = (0..CELL_COUNT)
-        //     .map(|_| cell_row.clone())
-        //     .collect::<Vec<_>>();
-
+    fn map_glider() -> Vec<Vec<Cell>> {
         let mut cells: Vec<Vec<Cell>> = (0..CELL_COUNT)
             .map(|_| {
                 (0..CELL_COUNT)
@@ -63,6 +58,21 @@ impl Gameplay {
         };
 
         cells
+    }
+
+    fn map_random() -> Vec<Vec<Cell>> {
+        (0..CELL_COUNT)
+            .map(|_| {
+                (0..CELL_COUNT)
+                    .map(|_| Cell {
+                        state: match ::rand::random::<bool>() {
+                            true => CellState::Life,
+                            false => CellState::Dead,
+                        },
+                    })
+                    .collect()
+            })
+            .collect()
     }
 
     pub fn play(mut self) -> GameState {
@@ -224,9 +234,16 @@ pub enum FieldBorders {
     Limited,
 }
 
+#[derive(Debug, Copy, Clone)]
+pub enum MapGeneration {
+    Random,
+    Glider,
+}
+
 pub struct GameplayParams {
-    pub cell_shape: CellShape,
     pub cell_update_frequency: f64,
     pub grid_line_thickness: f32,
+    pub cell_shape: CellShape,
     pub field_borders: FieldBorders,
+    pub map_generation: MapGeneration,
 }

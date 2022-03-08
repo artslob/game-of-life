@@ -1,4 +1,4 @@
-use crate::gameplay::{CellShape, FieldBorders, Gameplay, GameplayParams};
+use crate::gameplay::{CellShape, FieldBorders, Gameplay, GameplayParams, MapGeneration};
 use crate::GameState;
 use macroquad::hash;
 use macroquad::prelude::*;
@@ -9,6 +9,7 @@ pub struct Menu {
     cell_update_frequency: f32,
     grid_line_thickness: f32,
     field_borders_index: usize,
+    map_generation_index: usize,
 }
 
 impl Menu {
@@ -18,6 +19,7 @@ impl Menu {
             cell_update_frequency: 0.5,
             grid_line_thickness: 1.5,
             field_borders_index: 0,
+            map_generation_index: 0,
         }
     }
 
@@ -31,6 +33,15 @@ impl Menu {
         root_ui().window(hash!(), window_position, window_size, |ui| {
             ui.label(None, "Game of Life");
             let is_play_clicked = ui.button(None, "Play!");
+
+            ui.separator();
+
+            ui.combo_box(
+                hash!(),
+                "How to generate map",
+                &["Random", "Glider"],
+                &mut self.map_generation_index,
+            );
 
             ui.separator();
 
@@ -78,11 +89,17 @@ impl Menu {
                     1 => FieldBorders::Connected,
                     _ => panic!("index out of field borders array"),
                 };
+                let map_generation = match self.map_generation_index {
+                    0 => MapGeneration::Random,
+                    1 => MapGeneration::Glider,
+                    _ => panic!("index out of map generation array"),
+                };
                 let gameplay_params = GameplayParams {
-                    cell_shape,
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
+                    cell_shape,
                     field_borders,
+                    map_generation,
                 };
                 gameplay = Some(Gameplay::new(gameplay_params));
             }
