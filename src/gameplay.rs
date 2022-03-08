@@ -222,19 +222,19 @@ pub enum CellState {
     Life,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
 pub enum CellShape {
-    Circle,
     Square,
+    Circle,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
 pub enum FieldBorders {
     Connected,
     Limited,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
 pub enum MapGeneration {
     Random,
     Glider,

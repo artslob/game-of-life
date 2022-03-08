@@ -3,6 +3,7 @@ use crate::GameState;
 use macroquad::hash;
 use macroquad::prelude::*;
 use macroquad::ui::root_ui;
+use strum::VariantNames;
 
 pub struct Menu {
     cell_shape_index: usize,
@@ -39,7 +40,7 @@ impl Menu {
             ui.combo_box(
                 hash!(),
                 "How to generate map",
-                &["Random", "Glider"],
+                MapGeneration::VARIANTS,
                 &mut self.map_generation_index,
             );
 
@@ -48,7 +49,7 @@ impl Menu {
             ui.combo_box(
                 hash!(),
                 "Choose cell shape",
-                &["Square", "Circle"],
+                CellShape::VARIANTS,
                 &mut self.cell_shape_index,
             );
 
@@ -73,7 +74,7 @@ impl Menu {
             ui.combo_box(
                 hash!(),
                 "Field borders",
-                &["Limited", "Connected"],
+                FieldBorders::VARIANTS,
                 &mut self.field_borders_index,
             );
 

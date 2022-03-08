@@ -9,3 +9,4 @@ edition = "2021"
 macroquad = "0.3"
 itertools = "0.10"
 rand = "0.8"
+strum = { version = "0.24", features = ["derive"] }
