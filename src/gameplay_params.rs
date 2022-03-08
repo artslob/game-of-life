@@ -6,19 +6,19 @@ pub struct GameplayParams {
     pub map_generation: MapGeneration,
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
 pub enum CellShape {
     Square,
     Circle,
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
 pub enum FieldBorders {
     Connected,
     Limited,
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames)]
+#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
 pub enum MapGeneration {
     Random,
     Glider,

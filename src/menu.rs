@@ -80,22 +80,12 @@ impl Menu {
             );
 
             if is_play_clicked || is_key_pressed(KeyCode::Enter) {
-                // TODO make code fail at compile time
-                let cell_shape = match self.cell_shape_index {
-                    0 => CellShape::Square,
-                    1 => CellShape::Circle,
-                    _ => panic!("index out of cell shape array"),
-                };
-                let field_borders = match self.field_borders_index {
-                    0 => FieldBorders::Limited,
-                    1 => FieldBorders::Connected,
-                    _ => panic!("index out of field borders array"),
-                };
-                let map_generation = match self.map_generation_index {
-                    0 => MapGeneration::Random,
-                    1 => MapGeneration::Glider,
-                    _ => panic!("index out of map generation array"),
-                };
+                let cell_shape =
+                    CellShape::from_repr(self.cell_shape_index).expect("cell shape index error");
+                let field_borders = FieldBorders::from_repr(self.field_borders_index)
+                    .expect("field borders index error");
+                let map_generation = MapGeneration::from_repr(self.map_generation_index)
+                    .expect("map generation index error");
                 let gameplay_params = GameplayParams {
                     cell_update_frequency: self.cell_update_frequency as f64,
                     grid_line_thickness: self.grid_line_thickness,
