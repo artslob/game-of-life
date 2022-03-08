@@ -1,0 +1,10 @@
+image: "rust:1.58"
+
+tests:
+  script:
+    - rustc --version && cargo --version
+    - rustup component add rustfmt
+    - rustup component add clippy
+    - cargo fmt --all -- --check
+    - cargo test --workspace --verbose --all --locked
+    - cargo clippy --all-targets --all-features -- -D clippy::all -D unused_must_use -D warnings
