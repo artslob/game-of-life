@@ -70,13 +70,16 @@ impl Gameplay {
     }
 
     fn map_random() -> Vec<Vec<Cell>> {
+        let seed = (macroquad::time::get_time() * 10_000.0) as u64;
+        macroquad::rand::srand(seed);
+
         (0..CELL_COUNT)
             .map(|_| {
                 (0..CELL_COUNT)
                     .map(|_| Cell {
-                        state: match ::rand::random::<bool>() {
-                            true => CellState::Life,
-                            false => CellState::Dead,
+                        state: match ::macroquad::rand::gen_range(0u8, 2) {
+                            0 => CellState::Life,
+                            _ => CellState::Dead,
                         },
                     })
                     .collect()

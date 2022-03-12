@@ -8,7 +8,5 @@ edition = "2021"
 [dependencies]
 macroquad = "0.3"
 itertools = "0.10"
-rand = "0.8"
 # fix for wasm compilation: https://docs.rs/getrandom/latest/getrandom/#webassembly-support
-getrandom = { version = "0.2", features = ["js"] }
 strum = { version = "0.24", features = ["derive"] }
