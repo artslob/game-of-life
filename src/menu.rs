@@ -70,13 +70,13 @@ impl Menu {
                 &mut self.cell_update_frequency,
             );
 
-            ui.label(None, "Choose grid line thickness:");
-            ui.slider(
-                hash!(),
-                "[0.0 .. 5.0]",
-                0.0..5.0,
-                &mut self.grid_line_thickness,
-            );
+            // ui.label(None, "Choose grid line thickness:");
+            // ui.slider(
+            //     hash!(),
+            //     "[0.0 .. 5.0]",
+            //     0.0..5.0,
+            //     &mut self.grid_line_thickness,
+            // );
 
             ui.combo_box(
                 hash!(),
