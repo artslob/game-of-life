@@ -34,7 +34,7 @@ impl Menu {
     pub fn show(mut self) -> GameState {
         let mut gameplay_params = None;
 
-        // TODO fix resize
+        // macroquad does not support window resizing right now
         let window_position = vec2(screen_width() / 4., screen_height() / 4.);
         let window_size = vec2(screen_width() / 2., screen_height() / 2.);
 
