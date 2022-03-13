@@ -15,3 +15,4 @@ TODO:
 6. github.io
 7. add pause on space while game is running
 8. map frequency not as delay in seconds, but how many moves per second?
+9. add option to seed random generator

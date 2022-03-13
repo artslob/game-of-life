@@ -187,11 +187,11 @@ fn count_alive_cells(
     j: usize,
     field_borders: FieldBorders,
 ) -> usize {
-    let i_upper_pos = field_borders.subtract_index(i, current.len());
-    let i_lower_pos = field_borders.add_index(i, current.len());
+    let i_upper_pos = field_borders.decrease_index(i, current.len());
+    let i_lower_pos = field_borders.increase_index(i, current.len());
 
-    let j_left_pos = field_borders.subtract_index(j, row.len());
-    let j_right_pos = field_borders.add_index(j, row.len());
+    let j_left_pos = field_borders.decrease_index(j, row.len());
+    let j_right_pos = field_borders.increase_index(j, row.len());
 
     use std::iter::once;
 

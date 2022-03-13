@@ -23,24 +23,26 @@ pub enum FieldBorders {
 }
 
 impl FieldBorders {
-    pub fn subtract_index(&self, index: usize, max_index: usize) -> Option<usize> {
-        match index.checked_sub(1) {
-            None => match self {
-                FieldBorders::Connected => Some(max_index - 1),
-                FieldBorders::Limited => None,
-            },
-            Some(index) => Some(index),
+    pub fn decrease_index(&self, index: usize, max_index: usize) -> Option<usize> {
+        index
+            .checked_sub(1)
+            .or_else(|| self.when_connected(max_index - 1))
+    }
+
+    pub fn increase_index(&self, index: usize, max_index: usize) -> Option<usize> {
+        let next_index = index + 1;
+        if next_index < max_index {
+            Some(next_index)
+        } else {
+            self.when_connected(0)
         }
     }
 
-    pub fn add_index(&self, index: usize, max_index: usize) -> Option<usize> {
-        if index + 1 >= max_index {
-            match self {
-                FieldBorders::Connected => Some(0),
-                FieldBorders::Limited => None,
-            }
-        } else {
-            Some(index + 1)
+    #[inline]
+    fn when_connected(&self, num: usize) -> Option<usize> {
+        match self {
+            FieldBorders::Connected => Some(num),
+            FieldBorders::Limited => None,
         }
     }
 }
