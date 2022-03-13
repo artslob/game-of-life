@@ -8,11 +8,11 @@ Logo created with Canva.
 
 TODO:
 1. read map from file
-2. select map size
-3. select map from predefined
-4. allow creating custom map
-5. write game description in menu
-6. github.io
-7. add pause on space while game is running
-8. map frequency not as delay in seconds, but how many moves per second?
-9. add option to seed random generator
+1. select map size
+1. select map from predefined
+1. allow creating custom map
+1. write game description in menu
+1. publish game on github.io
+1. map frequency not as delay in seconds, but how many moves per second?
+1. add option to seed random generator
+1. add game description and keys mapping (maybe in widgets::Popup)

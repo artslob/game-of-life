@@ -17,6 +17,7 @@ pub struct Gameplay {
     field_borders: FieldBorders,
     background_color: BackgroundColor,
     cell_color: CellColor,
+    pause_state: PauseState,
 }
 
 impl Gameplay {
@@ -36,6 +37,7 @@ impl Gameplay {
             field_borders: params.field_borders,
             background_color: params.background_color,
             cell_color: params.cell_color,
+            pause_state: PauseState::Playing,
         }
     }
 
@@ -144,8 +146,14 @@ impl Gameplay {
             }
         }
 
+        if is_key_released(KeyCode::Space) {
+            self.pause_state.swap()
+        }
+
         // TODO calc cells update by past time
-        if get_time() - self.time > self.cell_update_frequency {
+        if matches!(self.pause_state, PauseState::Playing)
+            && get_time() - self.time > self.cell_update_frequency
+        {
             self.cells = calculate_next_generation(&self.cells, self.field_borders);
             self.time = get_time();
         }
@@ -213,4 +221,19 @@ pub struct Cell {
 pub enum CellState {
     Dead,
     Life,
+}
+
+#[derive(Debug, Copy, Clone)]
+enum PauseState {
+    Paused,
+    Playing,
+}
+
+impl PauseState {
+    fn swap(&mut self) {
+        *self = match self {
+            PauseState::Paused => PauseState::Playing,
+            PauseState::Playing => PauseState::Paused,
+        }
+    }
 }
