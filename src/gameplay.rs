@@ -188,24 +188,10 @@ fn count_alive_cells(
     field_borders: FieldBorders,
 ) -> usize {
     let i_upper_pos = field_borders.subtract_index(i, current.len());
-    let i_lower_pos: Option<usize> = if i + 1 >= current.len() {
-        match field_borders {
-            FieldBorders::Connected => Some(0),
-            FieldBorders::Limited => None,
-        }
-    } else {
-        Some(i + 1)
-    };
+    let i_lower_pos = field_borders.add_index(i, current.len());
 
     let j_left_pos = field_borders.subtract_index(j, row.len());
-    let j_right_pos = if j + 1 >= row.len() {
-        match field_borders {
-            FieldBorders::Connected => Some(0),
-            FieldBorders::Limited => None,
-        }
-    } else {
-        Some(j + 1)
-    };
+    let j_right_pos = field_borders.add_index(j, row.len());
 
     use std::iter::once;
 

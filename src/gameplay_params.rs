@@ -25,11 +25,22 @@ pub enum FieldBorders {
 impl FieldBorders {
     pub fn subtract_index(&self, index: usize, max_index: usize) -> Option<usize> {
         match index.checked_sub(1) {
-            None => match &self {
+            None => match self {
                 FieldBorders::Connected => Some(max_index - 1),
                 FieldBorders::Limited => None,
             },
             Some(index) => Some(index),
+        }
+    }
+
+    pub fn add_index(&self, index: usize, max_index: usize) -> Option<usize> {
+        if index + 1 >= max_index {
+            match self {
+                FieldBorders::Connected => Some(0),
+                FieldBorders::Limited => None,
+            }
+        } else {
+            Some(index + 1)
         }
     }
 }

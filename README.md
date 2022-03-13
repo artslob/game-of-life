@@ -12,3 +12,6 @@ TODO:
 3. select map from predefined
 4. allow creating custom map
 5. write game description in menu
+6. github.io
+7. add pause on space while game is running
+8. map frequency not as delay in seconds, but how many moves per second?
