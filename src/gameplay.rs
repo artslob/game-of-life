@@ -187,13 +187,7 @@ fn count_alive_cells(
     j: usize,
     field_borders: FieldBorders,
 ) -> usize {
-    let i_upper_pos = match i.checked_sub(1) {
-        None => match field_borders {
-            FieldBorders::Connected => Some(current.len() - 1),
-            FieldBorders::Limited => None,
-        },
-        Some(i) => Some(i),
-    };
+    let i_upper_pos = field_borders.subtract_index(i, current.len());
     let i_lower_pos: Option<usize> = if i + 1 >= current.len() {
         match field_borders {
             FieldBorders::Connected => Some(0),
@@ -203,13 +197,7 @@ fn count_alive_cells(
         Some(i + 1)
     };
 
-    let j_left_pos = match j.checked_sub(1) {
-        None => match field_borders {
-            FieldBorders::Connected => Some(row.len() - 1),
-            FieldBorders::Limited => None,
-        },
-        Some(i) => Some(i),
-    };
+    let j_left_pos = field_borders.subtract_index(j, row.len());
     let j_right_pos = if j + 1 >= row.len() {
         match field_borders {
             FieldBorders::Connected => Some(0),

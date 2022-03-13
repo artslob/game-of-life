@@ -22,6 +22,18 @@ pub enum FieldBorders {
     Limited,
 }
 
+impl FieldBorders {
+    pub fn subtract_index(&self, index: usize, max_index: usize) -> Option<usize> {
+        match index.checked_sub(1) {
+            None => match &self {
+                FieldBorders::Connected => Some(max_index - 1),
+                FieldBorders::Limited => None,
+            },
+            Some(index) => Some(index),
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
 pub enum MapGeneration {
     Random,
