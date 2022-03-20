@@ -7,7 +7,14 @@ use crate::game_state::GameState;
 use crate::menu::Menu;
 use macroquad::prelude::*;
 
-#[macroquad::main("Game of Life")]
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "Window name".to_owned(),
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(window_conf)]
 async fn main() {
     let mut game_state = GameState::Menu(Menu::new());
 
