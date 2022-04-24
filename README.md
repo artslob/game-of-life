@@ -16,3 +16,4 @@ TODO:
 1. add option to seed random generator
 1. add game description and keys mapping (maybe in widgets::Popup)
 1. use theme for ui
+1. improve algorithm for updating cells vector
