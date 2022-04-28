@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.3"
+egui-macroquad = "0.9"
 itertools = "0.10"
-# fix for wasm compilation: https://docs.rs/getrandom/latest/getrandom/#webassembly-support
 strum = { version = "0.24", features = ["derive"] }

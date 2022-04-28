@@ -10,7 +10,7 @@ pub struct GameplayParams {
     pub cell_color: CellColor,
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumVariantNames, strum::FromRepr)]
 pub enum CellShape {
     Square,
     Circle,
@@ -47,7 +47,7 @@ impl FieldBorders {
     }
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
+#[derive(Debug, Copy, Clone, PartialEq, strum::EnumVariantNames, strum::FromRepr)]
 pub enum MapGeneration {
     Random,
     Glider,
