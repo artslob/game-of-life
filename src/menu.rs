@@ -1,9 +1,9 @@
 use crate::gameplay::Gameplay;
 use crate::gameplay_params::{
-    BackgroundColor, CellColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
 };
 use crate::GameState;
-use egui_macroquad::egui::Align2;
+use egui_macroquad::egui::{Align2, Color32, Rgba};
 use macroquad::prelude::*;
 
 pub struct Menu {
@@ -13,7 +13,7 @@ pub struct Menu {
     field_borders: FieldBorders,
     map_generation: MapGeneration,
     background_color_index: usize,
-    cell_color_index: usize,
+    cell_color: Color32,
 }
 
 impl Menu {
@@ -25,7 +25,7 @@ impl Menu {
             field_borders: FieldBorders::Connected,
             map_generation: MapGeneration::Random,
             background_color_index: 0,
-            cell_color_index: 0,
+            cell_color: Color32::WHITE,
         }
     }
 
@@ -81,14 +81,12 @@ impl Menu {
                         });
 
                     // TODO background color
-                    // TODO cell color
+                    ui.color_edit_button_srgba(&mut self.cell_color);
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         let background_color =
                             BackgroundColor::from_repr(self.background_color_index)
                                 .expect("background color index error");
-                        let cell_color = CellColor::from_repr(self.cell_color_index)
-                            .expect("cell color index error");
                         gameplay_params = Some(GameplayParams {
                             cell_update_frequency: self.cell_update_frequency as f64,
                             grid_line_thickness: self.grid_line_thickness,
@@ -96,7 +94,7 @@ impl Menu {
                             field_borders: self.field_borders,
                             map_generation: self.map_generation,
                             background_color,
-                            cell_color,
+                            cell_color: Color::from(Rgba::from(self.cell_color).to_array()),
                         });
                     }
                 });

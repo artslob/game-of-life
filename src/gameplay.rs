@@ -1,5 +1,5 @@
 use crate::gameplay_params::{
-    BackgroundColor, CellColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
+    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
 };
 use crate::{GameState, Menu};
 use itertools::Itertools;
@@ -16,7 +16,7 @@ pub struct Gameplay {
     grid_line_thickness: f32,
     field_borders: FieldBorders,
     background_color: BackgroundColor,
-    cell_color: CellColor,
+    cell_color: Color,
     pause_state: PauseState,
 }
 
@@ -132,7 +132,7 @@ impl Gameplay {
                 let cell_x = x + (j as f32 * cell_width);
                 let cell_y = y + (i as f32 * cell_width);
 
-                let color = self.cell_color.color();
+                let color = self.cell_color;
 
                 match self.cell_shape {
                     CellShape::Circle => {
