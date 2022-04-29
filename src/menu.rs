@@ -10,7 +10,7 @@ pub struct Menu {
     cell_shape: CellShape,
     cell_update_frequency: f32,
     grid_line_thickness: f32,
-    field_borders_index: usize,
+    field_borders: FieldBorders,
     map_generation: MapGeneration,
     background_color_index: usize,
     cell_color_index: usize,
@@ -22,7 +22,7 @@ impl Menu {
             cell_shape: CellShape::Square,
             cell_update_frequency: 0.5,
             grid_line_thickness: 1.5,
-            field_borders_index: 0,
+            field_borders: FieldBorders::Connected,
             map_generation: MapGeneration::Random,
             background_color_index: 0,
             cell_color_index: 0,
@@ -62,9 +62,22 @@ impl Menu {
                             ui.selectable_value(&mut self.cell_shape, CellShape::Circle, "Circle");
                         });
 
+                    egui_macroquad::egui::ComboBox::from_label("Field borders")
+                        .selected_text(format!("{:?}", self.field_borders))
+                        .show_ui(ui, |ui| {
+                            ui.selectable_value(
+                                &mut self.field_borders,
+                                FieldBorders::Connected,
+                                "Connected",
+                            );
+                            ui.selectable_value(
+                                &mut self.field_borders,
+                                FieldBorders::Limited,
+                                "Limited",
+                            );
+                        });
+
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
-                        let field_borders = FieldBorders::from_repr(self.field_borders_index)
-                            .expect("field borders index error");
                         let background_color =
                             BackgroundColor::from_repr(self.background_color_index)
                                 .expect("background color index error");
@@ -74,7 +87,7 @@ impl Menu {
                             cell_update_frequency: self.cell_update_frequency as f64,
                             grid_line_thickness: self.grid_line_thickness,
                             cell_shape: self.cell_shape,
-                            field_borders,
+                            field_borders: self.field_borders,
                             map_generation: self.map_generation,
                             background_color,
                             cell_color,

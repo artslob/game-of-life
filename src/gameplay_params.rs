@@ -16,7 +16,7 @@ pub enum CellShape {
     Circle,
 }
 
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
+#[derive(Debug, Copy, Clone, PartialEq, strum::EnumVariantNames, strum::FromRepr)]
 pub enum FieldBorders {
     Connected,
     Limited,
