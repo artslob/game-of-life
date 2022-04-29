@@ -62,6 +62,9 @@ impl Menu {
                             ui.selectable_value(&mut self.cell_shape, CellShape::Circle, "Circle");
                         });
 
+                    // TODO map frequency
+                    // TODO grid line thickness
+
                     egui_macroquad::egui::ComboBox::from_label("Field borders")
                         .selected_text(format!("{:?}", self.field_borders))
                         .show_ui(ui, |ui| {
@@ -76,6 +79,9 @@ impl Menu {
                                 "Limited",
                             );
                         });
+
+                    // TODO background color
+                    // TODO cell color
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         let background_color =
