@@ -81,7 +81,11 @@ impl Menu {
                         });
 
                     // TODO background color
-                    ui.color_edit_button_srgba(&mut self.cell_color);
+
+                    ui.horizontal(|ui| {
+                        ui.label("Choose cell color:");
+                        ui.color_edit_button_srgba(&mut self.cell_color);
+                    });
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         let background_color =
