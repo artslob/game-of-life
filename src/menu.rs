@@ -1,7 +1,5 @@
 use crate::gameplay::Gameplay;
-use crate::gameplay_params::{
-    BackgroundColor, CellShape, FieldBorders, GameplayParams, MapGeneration,
-};
+use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
 use crate::GameState;
 use egui_macroquad::egui::{Align2, Color32, Rgba};
 use macroquad::prelude::*;
@@ -12,7 +10,7 @@ pub struct Menu {
     grid_line_thickness: f32,
     field_borders: FieldBorders,
     map_generation: MapGeneration,
-    background_color_index: usize,
+    background_color: Color32,
     cell_color: Color32,
 }
 
@@ -24,7 +22,7 @@ impl Menu {
             grid_line_thickness: 1.5,
             field_borders: FieldBorders::Connected,
             map_generation: MapGeneration::Random,
-            background_color_index: 0,
+            background_color: Color32::BLACK,
             cell_color: Color32::WHITE,
         }
     }
@@ -80,7 +78,10 @@ impl Menu {
                             );
                         });
 
-                    // TODO background color
+                    ui.horizontal(|ui| {
+                        ui.label("Choose background color:");
+                        ui.color_edit_button_srgba(&mut self.background_color);
+                    });
 
                     ui.horizontal(|ui| {
                         ui.label("Choose cell color:");
@@ -88,17 +89,14 @@ impl Menu {
                     });
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
-                        let background_color =
-                            BackgroundColor::from_repr(self.background_color_index)
-                                .expect("background color index error");
                         gameplay_params = Some(GameplayParams {
                             cell_update_frequency: self.cell_update_frequency as f64,
                             grid_line_thickness: self.grid_line_thickness,
                             cell_shape: self.cell_shape,
                             field_borders: self.field_borders,
                             map_generation: self.map_generation,
-                            background_color,
-                            cell_color: Color::from(Rgba::from(self.cell_color).to_array()),
+                            background_color: color32_to_color(self.background_color),
+                            cell_color: color32_to_color(self.cell_color),
                         });
                     }
                 });
@@ -117,4 +115,8 @@ impl Default for Menu {
     fn default() -> Self {
         Self::new()
     }
+}
+
+fn color32_to_color(color32: Color32) -> Color {
+    Color::from(Rgba::from(color32).to_array())
 }

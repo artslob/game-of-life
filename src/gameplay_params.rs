@@ -6,7 +6,7 @@ pub struct GameplayParams {
     pub cell_shape: CellShape,
     pub field_borders: FieldBorders,
     pub map_generation: MapGeneration,
-    pub background_color: BackgroundColor,
+    pub background_color: Color,
     pub cell_color: Color,
 }
 
@@ -51,35 +51,4 @@ impl FieldBorders {
 pub enum MapGeneration {
     Random,
     Glider,
-}
-
-#[derive(Debug, Copy, Clone, strum::EnumVariantNames, strum::FromRepr)]
-pub enum BackgroundColor {
-    Black,
-    Lightgray,
-    Gray,
-    Darkgray,
-    Yellow,
-    Red,
-    Green,
-    Blue,
-    Purple,
-    White,
-}
-
-impl BackgroundColor {
-    pub const fn color(&self) -> Color {
-        match self {
-            BackgroundColor::Lightgray => LIGHTGRAY,
-            BackgroundColor::Gray => GRAY,
-            BackgroundColor::Darkgray => DARKGRAY,
-            BackgroundColor::Yellow => YELLOW,
-            BackgroundColor::Red => RED,
-            BackgroundColor::Green => GREEN,
-            BackgroundColor::Blue => BLUE,
-            BackgroundColor::Purple => PURPLE,
-            BackgroundColor::White => WHITE,
-            BackgroundColor::Black => BLACK,
-        }
-    }
 }
