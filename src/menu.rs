@@ -3,6 +3,7 @@ use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGenerat
 use crate::GameState;
 use egui_macroquad::egui::{Align2, Color32, Rgba, Widget};
 use macroquad::prelude::*;
+use std::fmt::Debug;
 
 pub struct Menu {
     cell_shape: CellShape,
@@ -40,42 +41,11 @@ impl Menu {
                 .show(ctx, |ui| {
                     let is_play_clicked = ui.button("Play!").clicked();
 
-                    egui_macroquad::egui::ComboBox::from_label("How to generate map")
-                        .selected_text(format!("{:?}", self.map_generation))
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(
-                                &mut self.map_generation,
-                                MapGeneration::Random,
-                                "Random",
-                            );
-                            ui.selectable_value(
-                                &mut self.map_generation,
-                                MapGeneration::Glider,
-                                "Glider",
-                            );
-                        });
+                    enum_combobox(ui, "How to generate map", &mut self.map_generation);
 
-                    egui_macroquad::egui::ComboBox::from_label("Cell shape")
-                        .selected_text(format!("{:?}", self.cell_shape))
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(&mut self.cell_shape, CellShape::Square, "Square");
-                            ui.selectable_value(&mut self.cell_shape, CellShape::Circle, "Circle");
-                        });
+                    enum_combobox(ui, "Cell shape", &mut self.cell_shape);
 
-                    egui_macroquad::egui::ComboBox::from_label("Field borders")
-                        .selected_text(format!("{:?}", self.field_borders))
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(
-                                &mut self.field_borders,
-                                FieldBorders::Connected,
-                                "Connected",
-                            );
-                            ui.selectable_value(
-                                &mut self.field_borders,
-                                FieldBorders::Limited,
-                                "Limited",
-                            );
-                        });
+                    enum_combobox(ui, "Field borders", &mut self.field_borders);
 
                     ui.horizontal(|ui| {
                         ui.label("Choose map update frequency in seconds:");
@@ -145,4 +115,18 @@ impl Default for Menu {
 
 fn color32_to_color(color32: Color32) -> Color {
     Color::from(Rgba::from(color32).to_array())
+}
+
+fn enum_combobox<Value>(ui: &mut egui_macroquad::egui::Ui, label: &str, value: &mut Value)
+where
+    Value: PartialEq + Debug + strum::IntoEnumIterator,
+{
+    egui_macroquad::egui::ComboBox::from_label(label)
+        .selected_text(format!("{:?}", value))
+        .show_ui(ui, |ui| {
+            for variant in Value::iter() {
+                let description = format!("{:?}", variant);
+                ui.selectable_value(value, variant, description);
+            }
+        });
 }
