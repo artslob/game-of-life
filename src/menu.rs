@@ -69,7 +69,11 @@ impl Menu {
                         .ui(ui);
                     });
 
-                    // TODO grid line thickness
+                    ui.horizontal(|ui| {
+                        ui.label("Choose grid line thickness:");
+                        egui_macroquad::egui::Slider::new(&mut self.grid_line_thickness, 0.0..=1.5)
+                            .ui(ui);
+                    });
 
                     egui_macroquad::egui::ComboBox::from_label("Field borders")
                         .selected_text(format!("{:?}", self.field_borders))
