@@ -60,21 +60,6 @@ impl Menu {
                             ui.selectable_value(&mut self.cell_shape, CellShape::Circle, "Circle");
                         });
 
-                    ui.horizontal(|ui| {
-                        ui.label("Choose map update frequency in seconds:");
-                        egui_macroquad::egui::Slider::new(
-                            &mut self.cell_update_frequency,
-                            0.01..=10.0,
-                        )
-                        .ui(ui);
-                    });
-
-                    ui.horizontal(|ui| {
-                        ui.label("Choose grid line thickness:");
-                        egui_macroquad::egui::Slider::new(&mut self.grid_line_thickness, 0.0..=1.5)
-                            .ui(ui);
-                    });
-
                     egui_macroquad::egui::ComboBox::from_label("Field borders")
                         .selected_text(format!("{:?}", self.field_borders))
                         .show_ui(ui, |ui| {
@@ -89,6 +74,21 @@ impl Menu {
                                 "Limited",
                             );
                         });
+
+                    ui.horizontal(|ui| {
+                        ui.label("Choose map update frequency in seconds:");
+                        egui_macroquad::egui::Slider::new(
+                            &mut self.cell_update_frequency,
+                            0.01..=10.0,
+                        )
+                        .ui(ui);
+                    });
+
+                    ui.horizontal(|ui| {
+                        ui.label("Choose grid line thickness:");
+                        egui_macroquad::egui::Slider::new(&mut self.grid_line_thickness, 0.0..=1.5)
+                            .ui(ui);
+                    });
 
                     ui.horizontal(|ui| {
                         ui.label("Choose background color:");
