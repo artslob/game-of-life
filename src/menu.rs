@@ -110,10 +110,7 @@ impl Menu {
                     ui.separator();
 
                     ui.vertical_centered(|ui| {
-                        ui.hyperlink_to(
-                            format!("{} source code", egui_macroquad::egui::special_emojis::GIT),
-                            "https://github.com/artslob/game-of-life",
-                        );
+                        ui.hyperlink_to("source code", env!("CARGO_PKG_REPOSITORY"));
                     });
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
