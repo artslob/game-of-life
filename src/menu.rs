@@ -1,7 +1,7 @@
 use crate::gameplay::Gameplay;
 use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
 use crate::GameState;
-use egui_macroquad::egui::{Align2, Color32, Rgba, Widget};
+use egui_macroquad::egui::{self, Align2, Color32, Rgba, Widget};
 use macroquad::prelude::*;
 
 pub struct Menu {
@@ -33,7 +33,7 @@ impl Menu {
         let mut gameplay_params = None;
 
         egui_macroquad::ui(|ctx| {
-            egui_macroquad::egui::Window::new("Game of Life by artslob")
+            egui::Window::new("Game of Life by artslob")
                 .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
                 .collapsible(false)
                 .resizable(false)
@@ -48,17 +48,12 @@ impl Menu {
 
                     ui.horizontal(|ui| {
                         ui.label("Choose map update frequency in seconds:");
-                        egui_macroquad::egui::Slider::new(
-                            &mut self.cell_update_frequency,
-                            0.01..=10.0,
-                        )
-                        .ui(ui);
+                        egui::Slider::new(&mut self.cell_update_frequency, 0.01..=10.0).ui(ui);
                     });
 
                     ui.horizontal(|ui| {
                         ui.label("Choose grid line thickness:");
-                        egui_macroquad::egui::Slider::new(&mut self.grid_line_thickness, 0.0..=1.5)
-                            .ui(ui);
+                        egui::Slider::new(&mut self.grid_line_thickness, 0.0..=1.5).ui(ui);
                     });
 
                     ui.horizontal(|ui| {
@@ -116,13 +111,13 @@ fn color32_to_color(color32: Color32) -> Color {
     Color::from(Rgba::from(color32).to_array())
 }
 
-fn enum_combobox<Value>(ui: &mut egui_macroquad::egui::Ui, label: &str, value: &mut Value)
+fn enum_combobox<Value>(ui: &mut egui::Ui, label: &str, value: &mut Value)
 where
     Value: PartialEq + strum::IntoEnumIterator,
     for<'a> &'a Value: Into<&'static str>,
 {
     let selected_text: &'static str = (value as &Value).into();
-    egui_macroquad::egui::ComboBox::from_label(label)
+    egui::ComboBox::from_label(label)
         .selected_text(selected_text)
         .show_ui(ui, |ui| {
             for variant in Value::iter() {
