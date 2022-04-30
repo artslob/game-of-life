@@ -1,7 +1,7 @@
 use crate::gameplay::Gameplay;
 use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGeneration};
 use crate::GameState;
-use egui_macroquad::egui::{Align2, Color32, Rgba};
+use egui_macroquad::egui::{Align2, Color32, Rgba, Widget};
 use macroquad::prelude::*;
 
 pub struct Menu {
@@ -60,7 +60,15 @@ impl Menu {
                             ui.selectable_value(&mut self.cell_shape, CellShape::Circle, "Circle");
                         });
 
-                    // TODO map frequency
+                    ui.horizontal(|ui| {
+                        ui.label("Choose map update frequency in seconds:");
+                        egui_macroquad::egui::Slider::new(
+                            &mut self.cell_update_frequency,
+                            0.01..=10.0,
+                        )
+                        .ui(ui);
+                    });
+
                     // TODO grid line thickness
 
                     egui_macroquad::egui::ComboBox::from_label("Field borders")

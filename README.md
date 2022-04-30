@@ -15,5 +15,6 @@ TODO:
 1. map frequency not as delay in seconds, but how many moves per second?
 1. add option to seed random generator
 1. add game description and keys mapping (maybe in widgets::Popup)
-1. use theme for ui
+1. use theme/skin for ui
 1. improve algorithm for updating cells vector
+1. add link to github in menu
