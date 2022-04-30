@@ -3,7 +3,6 @@ use crate::gameplay_params::{CellShape, FieldBorders, GameplayParams, MapGenerat
 use crate::GameState;
 use egui_macroquad::egui::{Align2, Color32, Rgba, Widget};
 use macroquad::prelude::*;
-use std::fmt::Debug;
 
 pub struct Menu {
     cell_shape: CellShape,
@@ -119,13 +118,15 @@ fn color32_to_color(color32: Color32) -> Color {
 
 fn enum_combobox<Value>(ui: &mut egui_macroquad::egui::Ui, label: &str, value: &mut Value)
 where
-    Value: PartialEq + Debug + strum::IntoEnumIterator,
+    Value: PartialEq + strum::IntoEnumIterator,
+    for<'a> &'a Value: Into<&'static str>,
 {
+    let selected_text: &'static str = (value as &Value).into();
     egui_macroquad::egui::ComboBox::from_label(label)
-        .selected_text(format!("{:?}", value))
+        .selected_text(selected_text)
         .show_ui(ui, |ui| {
             for variant in Value::iter() {
-                let description = format!("{:?}", variant);
+                let description: &'static str = (&variant).into();
                 ui.selectable_value(value, variant, description);
             }
         });

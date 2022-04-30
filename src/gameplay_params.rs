@@ -11,13 +11,13 @@ pub struct GameplayParams {
     pub grid_line_color: Color,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumIter)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumIter, strum::IntoStaticStr)]
 pub enum CellShape {
     Square,
     Circle,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter)]
+#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter, strum::IntoStaticStr)]
 pub enum FieldBorders {
     Connected,
     Limited,
@@ -48,7 +48,7 @@ impl FieldBorders {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter)]
+#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter, strum::IntoStaticStr)]
 pub enum MapGeneration {
     Random,
     Glider,
