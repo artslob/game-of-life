@@ -17,4 +17,3 @@ TODO:
 1. add game description and keys mapping (maybe in widgets::Popup)
 1. use theme/skin for ui
 1. improve algorithm for updating cells vector
-1. add link to github in menu

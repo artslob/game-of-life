@@ -9,7 +9,7 @@ use macroquad::prelude::*;
 
 fn window_conf() -> Conf {
     Conf {
-        window_title: "Window name".to_owned(),
+        window_title: "Game of Life".to_owned(),
         ..Default::default()
     }
 }
