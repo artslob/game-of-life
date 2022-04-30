@@ -107,6 +107,15 @@ impl Menu {
                         ui.color_edit_button_srgba(&mut self.grid_line_color);
                     });
 
+                    ui.separator();
+
+                    ui.vertical_centered(|ui| {
+                        ui.hyperlink_to(
+                            format!("{} source code", egui_macroquad::egui::special_emojis::GIT),
+                            "https://github.com/artslob/game-of-life",
+                        );
+                    });
+
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         gameplay_params = Some(GameplayParams {
                             cell_update_frequency: self.cell_update_frequency as f64,
