@@ -15,6 +15,7 @@ pub struct Gameplay {
     field_borders: FieldBorders,
     background_color: Color,
     cell_color: Color,
+    grid_line_color: Color,
     pause_state: PauseState,
 }
 
@@ -35,6 +36,7 @@ impl Gameplay {
             field_borders: params.field_borders,
             background_color: params.background_color,
             cell_color: params.cell_color,
+            grid_line_color: params.grid_line_color,
             pause_state: PauseState::Playing,
         }
     }
@@ -98,7 +100,6 @@ impl Gameplay {
 
         let cell_width = square_width / CELL_COUNT as f32;
 
-        const LINE_COLOR: Color = GRAY;
         for i in 0..=CELL_COUNT {
             let horizontal_y = y + i as f32 * cell_width;
             draw_line(
@@ -107,7 +108,7 @@ impl Gameplay {
                 x + square_width,
                 horizontal_y,
                 self.grid_line_thickness,
-                LINE_COLOR,
+                self.grid_line_color,
             );
         }
         for j in 0..=CELL_COUNT {
@@ -118,7 +119,7 @@ impl Gameplay {
                 vertical_x,
                 y + square_width,
                 self.grid_line_thickness,
-                LINE_COLOR,
+                self.grid_line_color,
             );
         }
 

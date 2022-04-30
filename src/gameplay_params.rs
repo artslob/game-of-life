@@ -8,6 +8,7 @@ pub struct GameplayParams {
     pub map_generation: MapGeneration,
     pub background_color: Color,
     pub cell_color: Color,
+    pub grid_line_color: Color,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumVariantNames, strum::FromRepr)]

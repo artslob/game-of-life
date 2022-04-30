@@ -12,6 +12,7 @@ pub struct Menu {
     map_generation: MapGeneration,
     background_color: Color32,
     cell_color: Color32,
+    grid_line_color: Color32,
 }
 
 impl Menu {
@@ -24,6 +25,7 @@ impl Menu {
             map_generation: MapGeneration::Random,
             background_color: Color32::BLACK,
             cell_color: Color32::WHITE,
+            grid_line_color: Color32::GRAY,
         }
     }
 
@@ -100,6 +102,11 @@ impl Menu {
                         ui.color_edit_button_srgba(&mut self.cell_color);
                     });
 
+                    ui.horizontal(|ui| {
+                        ui.label("Choose grid line color:");
+                        ui.color_edit_button_srgba(&mut self.grid_line_color);
+                    });
+
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         gameplay_params = Some(GameplayParams {
                             cell_update_frequency: self.cell_update_frequency as f64,
@@ -109,6 +116,7 @@ impl Menu {
                             map_generation: self.map_generation,
                             background_color: color32_to_color(self.background_color),
                             cell_color: color32_to_color(self.cell_color),
+                            grid_line_color: color32_to_color(self.grid_line_color),
                         });
                     }
                 });
