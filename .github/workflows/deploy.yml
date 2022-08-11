@@ -6,19 +6,21 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+permissions:
+  contents: write
+
 jobs:
-  building:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: add wasm target
+      - name: Add wasm target
         run: rustup target add wasm32-unknown-unknown
-      - name: build
-        run: cargo build --target wasm32-unknown-unknown
-  deploy:
-    needs: building
-    runs-on: ubuntu-latest
-    steps:
-      - name: qwe
-        run: ls -la
-      - run: tree
+      - name: Build
+        run: cargo build --target wasm32-unknown-unknown --release
+      - run: cp target/wasm32-unknown-unknown/release/game-of-life.wasm pages/
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: pages
+          branch: page
