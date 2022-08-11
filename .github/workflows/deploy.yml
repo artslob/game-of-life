@@ -15,3 +15,10 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
       - name: build
         run: cargo build --target wasm32-unknown-unknown
+  deploy:
+    needs: building
+    runs-on: ubuntu-latest
+    steps:
+      - name: qwe
+        run: ls -la
+      - run: tree
