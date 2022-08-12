@@ -78,6 +78,18 @@ impl Menu {
                         ui.color_edit_button_srgba(&mut self.grid_line_color);
                     });
 
+                    ui.collapsing("Shortcuts", |ui| {
+                        ui.horizontal_wrapped(|ui| {
+                            ui.label("Press ");
+                            ui.monospace("Enter");
+                            ui.label(" to start the game. While in game press ");
+                            ui.monospace("Escape");
+                            ui.label(" to return back to menu. You can pause game with");
+                            ui.monospace("Space");
+                            ui.label(".");
+                        });
+                    });
+
                     ui.separator();
 
                     ui.vertical_centered(|ui| {
