@@ -1,0 +1,27 @@
+name: Deploy to GitHub pages
+
+on:
+  push:
+    branches: [master]
+
+env:
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add wasm target
+        run: rustup target add wasm32-unknown-unknown
+      - name: Build
+        run: cargo build --target wasm32-unknown-unknown --release
+      - run: cp target/wasm32-unknown-unknown/release/game-of-life.wasm pages/
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: pages
+          branch: page
