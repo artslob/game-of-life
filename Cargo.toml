@@ -8,6 +8,6 @@ repository = "https://github.com/artslob/game-of-life"
 
 [dependencies]
 macroquad = "0.3"
-egui-macroquad = "0.9"
+egui-macroquad = "0.11"
 itertools = "0.10"
 strum = { version = "0.24", features = ["derive"] }
