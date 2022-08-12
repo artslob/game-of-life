@@ -17,7 +17,7 @@ pub enum CellShape {
     Circle,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter, strum::IntoStaticStr)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumIter, strum::IntoStaticStr)]
 pub enum FieldBorders {
     Connected,
     Limited,
@@ -48,7 +48,7 @@ impl FieldBorders {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, strum::EnumIter, strum::IntoStaticStr)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, strum::EnumIter, strum::IntoStaticStr)]
 pub enum MapGeneration {
     Random,
     Glider,

@@ -38,7 +38,14 @@ impl Menu {
                 .collapsible(false)
                 .resizable(false)
                 .show(ctx, |ui| {
-                    let is_play_clicked = ui.button("Play!").clicked();
+                    if screen_height() > screen_width() {
+                        ui.set_width(screen_width() * 0.9);
+                    } else {
+                        // allows to reset width constraints
+                        ui.set_max_width(0.0);
+                    }
+
+                    let is_play_clicked = ui.horizontal(|ui| ui.button("Play!").clicked()).inner;
 
                     enum_combobox(ui, "How to generate map", &mut self.map_generation);
 
