@@ -6,7 +6,7 @@ use macroquad::prelude::*;
 
 pub struct Menu {
     cell_shape: CellShape,
-    cell_update_frequency: f32,
+    updates_per_sec: f32,
     grid_line_thickness: f32,
     field_borders: FieldBorders,
     map_generation: MapGeneration,
@@ -19,7 +19,7 @@ impl Menu {
     pub fn new() -> Self {
         Self {
             cell_shape: CellShape::Square,
-            cell_update_frequency: 0.5,
+            updates_per_sec: 1.0,
             grid_line_thickness: 1.5,
             field_borders: FieldBorders::Connected,
             map_generation: MapGeneration::Random,
@@ -54,8 +54,10 @@ impl Menu {
                     enum_combobox(ui, "Field borders", &mut self.field_borders);
 
                     ui.horizontal(|ui| {
-                        ui.label("Choose map update frequency in seconds:");
-                        egui::Slider::new(&mut self.cell_update_frequency, 0.01..=10.0).ui(ui);
+                        ui.label("Updates per second:");
+                        egui::Slider::new(&mut self.updates_per_sec, 0.01..=10.0)
+                            .clamp_to_range(false)
+                            .ui(ui);
                     });
 
                     ui.horizontal(|ui| {
@@ -98,7 +100,7 @@ impl Menu {
 
                     if is_play_clicked || is_key_pressed(KeyCode::Enter) {
                         gameplay_params = Some(GameplayParams {
-                            cell_update_frequency: self.cell_update_frequency as f64,
+                            updates_per_sec: self.updates_per_sec as f64,
                             grid_line_thickness: self.grid_line_thickness,
                             cell_shape: self.cell_shape,
                             field_borders: self.field_borders,

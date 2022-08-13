@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
 pub struct GameplayParams {
-    pub cell_update_frequency: f64,
+    pub updates_per_sec: f64,
     pub grid_line_thickness: f32,
     pub cell_shape: CellShape,
     pub field_borders: FieldBorders,

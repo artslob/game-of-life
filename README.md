@@ -11,7 +11,6 @@ TODO:
 1. select map size
 1. select map from predefined
 1. allow creating custom map
-1. map frequency not as delay in seconds, but how many moves per second?
 1. add option to seed random generator
 1. use theme/skin for ui
 1. improve algorithm for updating cells vector

@@ -10,7 +10,7 @@ pub struct Gameplay {
     cells: Vec<Vec<Cell>>,
     time: f64,
     cell_shape: CellShape,
-    cell_update_frequency: f64,
+    updates_per_sec: f64,
     grid_line_thickness: f32,
     field_borders: FieldBorders,
     background_color: Color,
@@ -31,7 +31,7 @@ impl Gameplay {
             cells,
             time: get_time(),
             cell_shape: params.cell_shape,
-            cell_update_frequency: params.cell_update_frequency,
+            updates_per_sec: params.updates_per_sec,
             grid_line_thickness: params.grid_line_thickness,
             field_borders: params.field_borders,
             background_color: params.background_color,
@@ -146,15 +146,20 @@ impl Gameplay {
         }
 
         if is_key_released(KeyCode::Space) {
+            // TODO update time?
             self.pause_state.swap()
         }
 
-        // TODO calc cells update by past time
-        if matches!(self.pause_state, PauseState::Playing)
-            && get_time() - self.time > self.cell_update_frequency
-        {
-            self.cells = calculate_next_generation(&self.cells, self.field_borders);
-            self.time = get_time();
+        if matches!(self.pause_state, PauseState::Playing) {
+            let time_delta = get_time() - self.time;
+            let updates = (self.updates_per_sec * time_delta) as i32;
+            if updates > 0 {
+                for _ in 0..updates {
+                    self.cells = calculate_next_generation(&self.cells, self.field_borders);
+                }
+                // TODO apply difference in frames
+                self.time = get_time();
+            }
         }
 
         if is_key_pressed(KeyCode::Escape) {
