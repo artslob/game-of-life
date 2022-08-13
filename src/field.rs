@@ -41,21 +41,11 @@ impl Field {
             })
             .collect();
 
-        cells[0][1] = Cell {
-            state: CellState::Life,
-        };
-        cells[1][2] = Cell {
-            state: CellState::Life,
-        };
-        cells[2][0] = Cell {
-            state: CellState::Life,
-        };
-        cells[2][1] = Cell {
-            state: CellState::Life,
-        };
-        cells[2][2] = Cell {
-            state: CellState::Life,
-        };
+        cells[0][1].state = CellState::Life;
+        cells[1][2].state = CellState::Life;
+        cells[2][0].state = CellState::Life;
+        cells[2][1].state = CellState::Life;
+        cells[2][2].state = CellState::Life;
 
         cells
     }
