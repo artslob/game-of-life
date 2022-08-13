@@ -1,3 +1,4 @@
+pub mod field;
 pub mod game_state;
 pub mod gameplay;
 pub mod gameplay_params;
