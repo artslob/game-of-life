@@ -146,8 +146,7 @@ impl Gameplay {
         }
 
         if is_key_released(KeyCode::Space) {
-            // TODO update time?
-            self.pause_state.swap()
+            self.swap_pause_state()
         }
 
         if matches!(self.pause_state, PauseState::Playing) {
@@ -170,6 +169,13 @@ impl Gameplay {
 
     pub fn background_color(&self) -> Color {
         self.background_color
+    }
+
+    fn swap_pause_state(&mut self) {
+        if let PauseState::Paused { time } = self.pause_state {
+            self.time += get_time() - time;
+        }
+        self.pause_state.swap()
     }
 }
 
@@ -228,15 +234,15 @@ pub enum CellState {
 
 #[derive(Debug, Copy, Clone)]
 enum PauseState {
-    Paused,
+    Paused { time: f64 },
     Playing,
 }
 
 impl PauseState {
     fn swap(&mut self) {
         *self = match self {
-            PauseState::Paused => PauseState::Playing,
-            PauseState::Playing => PauseState::Paused,
+            PauseState::Paused { .. } => PauseState::Playing,
+            PauseState::Playing => PauseState::Paused { time: get_time() },
         }
     }
 }
