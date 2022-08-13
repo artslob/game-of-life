@@ -87,15 +87,13 @@ impl Field {
                 let cell_x = x + (j as f32 * cell_width);
                 let cell_y = y + (i as f32 * cell_width);
 
-                let color = self.cell_color;
-
                 match self.cell_shape {
                     CellShape::Circle => {
                         let radius = cell_width / 2.0;
-                        draw_circle(cell_x + radius, cell_y + radius, radius, color);
+                        draw_circle(cell_x + radius, cell_y + radius, radius, self.cell_color);
                     }
                     CellShape::Square => {
-                        draw_rectangle(cell_x, cell_y, cell_width, cell_width, color)
+                        draw_rectangle(cell_x, cell_y, cell_width, cell_width, self.cell_color)
                     }
                 }
             }
