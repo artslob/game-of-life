@@ -13,4 +13,3 @@ TODO:
 1. allow creating custom map
 1. add option to seed random generator
 1. use theme/skin for ui
-1. improve algorithm for updating cells vector
