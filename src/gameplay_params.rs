@@ -24,13 +24,26 @@ pub enum FieldBorders {
 }
 
 impl FieldBorders {
-    pub fn decrease_index(&self, index: usize, max_index: usize) -> Option<usize> {
+    pub fn create_index_iter(
+        &self,
+        index: usize,
+        max_index: usize,
+    ) -> impl Iterator<Item = usize> + Clone {
+        let prev = self.decrease_index(index, max_index);
+        let next = self.increase_index(index, max_index);
+
+        use std::iter::once;
+
+        prev.into_iter().chain(once(index)).chain(next.into_iter())
+    }
+
+    fn decrease_index(&self, index: usize, max_index: usize) -> Option<usize> {
         index
             .checked_sub(1)
             .or_else(|| self.when_connected(max_index - 1))
     }
 
-    pub fn increase_index(&self, index: usize, max_index: usize) -> Option<usize> {
+    fn increase_index(&self, index: usize, max_index: usize) -> Option<usize> {
         let next_index = index + 1;
         if next_index < max_index {
             Some(next_index)

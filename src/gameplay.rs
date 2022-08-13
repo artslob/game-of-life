@@ -204,17 +204,11 @@ fn count_alive_cells(
     j: usize,
     field_borders: FieldBorders,
 ) -> usize {
-    let i_upper_pos = field_borders.decrease_index(i, current.len());
-    let i_lower_pos = field_borders.increase_index(i, current.len());
+    let i_iter = field_borders.create_index_iter(i, current.len());
+    let j_iter = field_borders.create_index_iter(j, row.len());
 
-    let j_left_pos = field_borders.decrease_index(j, row.len());
-    let j_right_pos = field_borders.increase_index(j, row.len());
-
-    use std::iter::once;
-
-    (i_upper_pos.iter().chain(once(&i)).chain(i_lower_pos.iter()))
-        .copied()
-        .cartesian_product((j_left_pos.iter().chain(once(&j)).chain(j_right_pos.iter())).copied())
+    i_iter
+        .cartesian_product(j_iter)
         .filter(|(a, b)| !(*a == i && *b == j))
         .map(|(a, b)| &current[a][b])
         .filter(|cell| matches!(cell.state, CellState::Life))
