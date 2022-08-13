@@ -157,8 +157,7 @@ impl Gameplay {
                 for _ in 0..updates {
                     self.cells = calculate_next_generation(&self.cells, self.field_borders);
                 }
-                // TODO apply difference in frames
-                self.time = get_time();
+                self.time += updates as f64 / self.updates_per_sec;
             }
         }
 
