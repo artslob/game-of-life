@@ -6,7 +6,9 @@ use macroquad::prelude::*;
 pub const CELL_COUNT: i32 = 50;
 
 pub struct Field {
-    cells: Vec<Vec<Cell>>,
+    cells_a: Vec<Vec<Cell>>,
+    cells_b: Vec<Vec<Cell>>,
+    cells_pointer: CellsPointer,
     field_borders: FieldBorders,
     cell_shape: CellShape,
     cell_color: Color,
@@ -19,7 +21,9 @@ impl Field {
             MapGeneration::Glider => Self::map_glider(),
         };
         Field {
-            cells,
+            cells_a: cells.clone(),
+            cells_b: cells,
+            cells_pointer: CellsPointer::First,
             field_borders: params.field_borders,
             cell_shape: params.cell_shape,
             cell_color: params.cell_color,
@@ -74,12 +78,12 @@ impl Field {
             .collect()
     }
 
-    pub fn update(&mut self) {
-        self.cells = calculate_next_generation(&self.cells, self.field_borders)
-    }
-
     pub fn draw(&self, x: f32, y: f32, cell_width: f32) {
-        for (i, row) in self.cells.iter().enumerate() {
+        let cells = match self.cells_pointer {
+            CellsPointer::First => &self.cells_a,
+            CellsPointer::Second => &self.cells_b,
+        };
+        for (i, row) in cells.iter().enumerate() {
             for (j, cell) in row.iter().enumerate() {
                 if matches!(cell.state, CellState::Dead) {
                     continue;
@@ -99,24 +103,25 @@ impl Field {
             }
         }
     }
-}
 
-fn calculate_next_generation(current: &[Vec<Cell>], field_borders: FieldBorders) -> Vec<Vec<Cell>> {
-    let mut result = vec![];
-    for (i, row) in current.iter().enumerate() {
-        let mut next_row = vec![];
-        for (j, cell) in row.iter().enumerate() {
-            let alive_count = count_alive_cells(current, row, i, j, field_borders);
-            let state = match (cell.state, alive_count) {
-                (CellState::Dead, 3) => CellState::Life,
-                (CellState::Life, 2 | 3) => CellState::Life,
-                _ => CellState::Dead,
-            };
-            next_row.push(Cell { state });
+    pub fn update(&mut self) {
+        let (current, next) = match self.cells_pointer {
+            CellsPointer::First => (&self.cells_a, &mut self.cells_b),
+            CellsPointer::Second => (&self.cells_b, &mut self.cells_a),
+        };
+        for (i, row) in current.iter().enumerate() {
+            for (j, cell) in row.iter().enumerate() {
+                let alive_count = count_alive_cells(current, row, i, j, self.field_borders);
+                let state = match (cell.state, alive_count) {
+                    (CellState::Dead, 3) => CellState::Life,
+                    (CellState::Life, 2 | 3) => CellState::Life,
+                    _ => CellState::Dead,
+                };
+                next[i][j] = Cell { state };
+            }
         }
-        result.push(next_row);
+        self.cells_pointer = self.cells_pointer.swap();
     }
-    result
 }
 
 fn count_alive_cells(
@@ -146,4 +151,19 @@ pub struct Cell {
 pub enum CellState {
     Dead,
     Life,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum CellsPointer {
+    First,
+    Second,
+}
+
+impl CellsPointer {
+    fn swap(self) -> Self {
+        match self {
+            CellsPointer::First => CellsPointer::Second,
+            CellsPointer::Second => CellsPointer::First,
+        }
+    }
 }
