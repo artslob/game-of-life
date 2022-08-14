@@ -91,26 +91,24 @@ impl Field {
     }
 
     pub fn update(&mut self) {
-        for i in 0..self.width.0 {
-            for j in 0..self.width.0 {
-                let current = match self.cells_pointer {
-                    CellsPointer::First => self.cells_a.as_slice(),
-                    CellsPointer::Second => self.cells_b.as_slice(),
-                };
-                let alive_count = self.count_alive_cells(current, i, j);
-                let index = self.width.calc_index(i, j);
-                let cell = &current[index];
-                let state = match (cell.state, alive_count) {
-                    (CellState::Dead, 3) => CellState::Life,
-                    (CellState::Life, 2 | 3) => CellState::Life,
-                    _ => CellState::Dead,
-                };
-                let next = match self.cells_pointer {
-                    CellsPointer::First => &mut self.cells_b,
-                    CellsPointer::Second => &mut self.cells_a,
-                };
-                next[index] = Cell { state };
-            }
+        for (i, j) in (0..self.width.0).cartesian_product(0..self.width.0) {
+            let current = match self.cells_pointer {
+                CellsPointer::First => &self.cells_a,
+                CellsPointer::Second => &self.cells_b,
+            };
+            let alive_count = self.count_alive_cells(current, i, j);
+            let index = self.width.calc_index(i, j);
+            let cell = &current[index];
+            let state = match (cell.state, alive_count) {
+                (CellState::Dead, 3) => CellState::Life,
+                (CellState::Life, 2 | 3) => CellState::Life,
+                _ => CellState::Dead,
+            };
+            let next = match self.cells_pointer {
+                CellsPointer::First => &mut self.cells_b,
+                CellsPointer::Second => &mut self.cells_a,
+            };
+            next[index] = Cell { state };
         }
         self.cells_pointer = self.cells_pointer.swap();
     }
