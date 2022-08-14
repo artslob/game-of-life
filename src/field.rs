@@ -6,7 +6,7 @@ pub struct Field {
     cells_a: Vec<Cell>,
     cells_b: Vec<Cell>,
     cells_pointer: CellsPointer,
-    width: usize,
+    width: Width,
     field_borders: FieldBorders,
     cell_shape: CellShape,
     cell_color: Color,
@@ -14,7 +14,7 @@ pub struct Field {
 
 impl Field {
     pub fn new(params: &GameplayParams) -> Self {
-        let width = 50;
+        let width = Width(50);
         let cells = match params.map_generation {
             MapGeneration::Random => Self::map_random(width),
             MapGeneration::Glider => Self::map_glider(width),
@@ -30,27 +30,27 @@ impl Field {
         }
     }
 
-    fn map_glider(width: usize) -> Vec<Cell> {
-        let mut cells = (0..(width.pow(2)))
+    fn map_glider(width: Width) -> Vec<Cell> {
+        let mut cells = (0..(width.0.pow(2)))
             .map(|_| Cell {
                 state: CellState::Dead,
             })
             .collect_vec();
 
-        cells[1].state = CellState::Life;
-        cells[width + 2].state = CellState::Life;
-        cells[2 * width].state = CellState::Life;
-        cells[2 * width + 1].state = CellState::Life;
-        cells[2 * width + 2].state = CellState::Life;
+        cells[width.calc_index(0, 1)].state = CellState::Life;
+        cells[width.calc_index(1, 2)].state = CellState::Life;
+        cells[width.calc_index(2, 0)].state = CellState::Life;
+        cells[width.calc_index(2, 1)].state = CellState::Life;
+        cells[width.calc_index(2, 2)].state = CellState::Life;
 
         cells
     }
 
-    fn map_random(width: usize) -> Vec<Cell> {
+    fn map_random(width: Width) -> Vec<Cell> {
         let seed = (macroquad::time::get_time() * 10_000.0) as u64;
         macroquad::rand::srand(seed);
 
-        (0..(width.pow(2)))
+        (0..(width.0.pow(2)))
             .map(|_| Cell {
                 state: match ::macroquad::rand::gen_range(0u8, 2) {
                     0 => CellState::Life,
@@ -61,11 +61,7 @@ impl Field {
     }
 
     pub fn width(&self) -> usize {
-        self.width
-    }
-
-    fn get_index(&self, row: usize, column: usize) -> usize {
-        row * self.width + column
+        self.width.0
     }
 
     pub fn draw(&self, x: f32, y: f32, cell_width: f32) {
@@ -73,7 +69,7 @@ impl Field {
             CellsPointer::First => &self.cells_a,
             CellsPointer::Second => &self.cells_b,
         };
-        for (i, row) in cells.chunks(self.width).enumerate() {
+        for (i, row) in cells.chunks(self.width.0).enumerate() {
             for (j, cell) in row.iter().enumerate() {
                 if matches!(cell.state, CellState::Dead) {
                     continue;
@@ -95,8 +91,8 @@ impl Field {
     }
 
     pub fn update(&mut self) {
-        for i in 0..self.width {
-            for j in 0..self.width {
+        for i in 0..self.width.0 {
+            for j in 0..self.width.0 {
                 let current = match self.cells_pointer {
                     CellsPointer::First => self.cells_a.as_slice(),
                     CellsPointer::Second => self.cells_b.as_slice(),
@@ -108,7 +104,7 @@ impl Field {
                     j as usize,
                     self.field_borders,
                 );
-                let index = self.get_index(i, j);
+                let index = self.width.calc_index(i, j);
                 let cell = &current[index];
                 let state = match (cell.state, alive_count) {
                     (CellState::Dead, 3) => CellState::Life,
@@ -128,20 +124,29 @@ impl Field {
 
 fn count_alive_cells(
     current: &[Cell],
-    width: usize,
+    width: Width,
     i: usize,
     j: usize,
     field_borders: FieldBorders,
 ) -> usize {
-    let i_iter = field_borders.create_index_iter(i, width);
-    let j_iter = field_borders.create_index_iter(j, width);
+    let i_iter = field_borders.create_index_iter(i, width.0);
+    let j_iter = field_borders.create_index_iter(j, width.0);
 
     i_iter
         .cartesian_product(j_iter)
         .filter(|(a, b)| !(*a == i && *b == j))
-        .map(|(a, b)| &current[(a * width) + b])
+        .map(|(a, b)| &current[width.calc_index(a, b)])
         .filter(|cell| matches!(cell.state, CellState::Life))
         .count()
+}
+
+#[derive(Copy, Clone)]
+pub struct Width(usize);
+
+impl Width {
+    fn calc_index(&self, row: usize, column: usize) -> usize {
+        row * self.0 + column
+    }
 }
 
 #[derive(Debug, Clone)]
