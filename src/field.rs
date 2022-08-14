@@ -37,7 +37,7 @@ impl Field {
             })
             .collect_vec();
 
-        cells[width + 1].state = CellState::Life;
+        cells[1].state = CellState::Life;
         cells[width + 2].state = CellState::Life;
         cells[2 * width].state = CellState::Life;
         cells[2 * width + 1].state = CellState::Life;
