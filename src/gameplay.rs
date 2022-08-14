@@ -1,5 +1,4 @@
 use crate::field::Field;
-use crate::field::CELL_COUNT;
 use crate::gameplay_params::GameplayParams;
 use crate::{GameState, Menu};
 use macroquad::prelude::*;
@@ -40,9 +39,9 @@ impl Gameplay {
         let x = ((scr_w - square_width) / 2.).max(0.);
         let y = ((scr_h - square_width) / 2.).max(0.);
 
-        let cell_width = square_width / CELL_COUNT as f32;
+        let cell_width = square_width / self.field.width() as f32;
 
-        for i in 0..=CELL_COUNT {
+        for i in 0..=self.field.width() {
             let horizontal_y = y + i as f32 * cell_width;
             draw_line(
                 x,
@@ -53,7 +52,7 @@ impl Gameplay {
                 self.grid_line_color,
             );
         }
-        for j in 0..=CELL_COUNT {
+        for j in 0..=self.field.width() {
             let vertical_x = x + j as f32 * cell_width;
             draw_line(
                 vertical_x,
