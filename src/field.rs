@@ -97,13 +97,7 @@ impl Field {
                     CellsPointer::First => self.cells_a.as_slice(),
                     CellsPointer::Second => self.cells_b.as_slice(),
                 };
-                let alive_count = count_alive_cells(
-                    current,
-                    self.width,
-                    i as usize,
-                    j as usize,
-                    self.field_borders,
-                );
+                let alive_count = self.count_alive_cells(current, i, j);
                 let index = self.width.calc_index(i, j);
                 let cell = &current[index];
                 let state = match (cell.state, alive_count) {
@@ -120,24 +114,18 @@ impl Field {
         }
         self.cells_pointer = self.cells_pointer.swap();
     }
-}
 
-fn count_alive_cells(
-    current: &[Cell],
-    width: Width,
-    i: usize,
-    j: usize,
-    field_borders: FieldBorders,
-) -> usize {
-    let i_iter = field_borders.create_index_iter(i, width.0);
-    let j_iter = field_borders.create_index_iter(j, width.0);
+    fn count_alive_cells(&self, current: &[Cell], i: usize, j: usize) -> usize {
+        let i_iter = self.field_borders.create_index_iter(i, self.width.0);
+        let j_iter = self.field_borders.create_index_iter(j, self.width.0);
 
-    i_iter
-        .cartesian_product(j_iter)
-        .filter(|(a, b)| !(*a == i && *b == j))
-        .map(|(a, b)| &current[width.calc_index(a, b)])
-        .filter(|cell| matches!(cell.state, CellState::Life))
-        .count()
+        i_iter
+            .cartesian_product(j_iter)
+            .filter(|(a, b)| !(*a == i && *b == j))
+            .map(|(a, b)| &current[self.width.calc_index(a, b)])
+            .filter(|cell| matches!(cell.state, CellState::Life))
+            .count()
+    }
 }
 
 #[derive(Copy, Clone)]
